@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="21">
+    <author>Mogli</author>
+    <version>4.0.9.0</version>
+    <title>
+        <en>Auto Combine</en>
+        <de>Automatisch Mähdreschen</de>
+		<fr>Auto Combine</fr>
+    </title>
+    <description>
+        <en>
+<![CDATA[Auto Combine]]></en>
+        <de>
+<![CDATA[Automatisch Mähdreschen]]></de>
+<fr>
+<![CDATA[Auto Combine - French traduction by Waylan]]></fr>
+    </description>
+    <iconFilename>store.dds</iconFilename>
+    <multiplayer supported="true"/>
+	
+    <extraSourceFiles>
+        <sourceFile filename="register.lua"/>
+    </extraSourceFiles>
+
+	<inputBindings>
+		<input name="AC_COMBINE_HELPPANEL" 	  category="VEHICLE" key1="KEY_5" key2="" button="" device="0" mouse="" />
+		<input name="AC_COMBINE_SWAP_SIDE"    category="VEHICLE" key1="KEY_6" key2="" button="" device="0" mouse="" />
+		<input name="AC_COMBINE_ENABLE"       category="VEHICLE" key1="KEY_lctrl KEY_5" key2="" button="" device="0" mouse="" />
+		<input name="AC_AUTO_STEER"           category="VEHICLE" key1="KEY_lctrl KEY_6" key2="" button="" device="0" mouse="" />
+	</inputBindings>
+	
+	<l10n>
+		<!--AutoCombine helpPanel text-->
+		<text name="AC_COMBINE_VERSION">
+			<en>AutoCombine v4.1 b</en>
+			<de>AutoCombine v4.1 b</de>
+			<fr>AutoCombine v4.1 b</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_START">
+			<en>AutoCombine on</en>
+			<de>Alternativer Helfer</de>
+			<fr>AutoCombine On</fr>			
+		</text>
+		<text name="AC_COMBINE_TXT_STOP">
+			<en>AutoCombine off</en>
+			<de>Normaler Helfer</de>
+			<fr>AutoCombine Off</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_WORKWIDTH">
+			<en>workwidth:</en>
+			<de>Arbeitsbreite:</de>
+			<fr>Larg. travail:</fr>
+		</text>
+		<text name="AC_COMBINE_SWAP_SIDE">
+			<en>swap left/right</en>
+			<de>Tausche aktive Seite</de>
+			<fr>Permut. gauche/droite</fr>
+		</text>		
+		<text name="AC_COMBINE_ENABLE">
+			<en>AutoCombine ON/OFF</en>
+			<de>AutoCombine AN/AUS</de>
+			<fr>AutoCombine On/Off</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT">
+			<en>active side: LEFT</en>
+			<de>Aktive Seite: LINKS</de>
+			<fr>Côté actif: Gauche</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT">
+			<en>active side: RIGHT</en>
+			<de>Aktive Seite: RECHTS</de>
+			<fr>Côté actif: Droit</fr>
+		</text>		
+
+		<text name="AC_COMBINE_WAITMODE_ON">
+			<en>unload mode [standing]</en>
+			<de>Abtankmodus [stehend]</de>
+			<fr>Déchargement [A l'arrêt]</fr>
+		</text>	
+		<text name="AC_COMBINE_WAITMODE_OFF">
+			<en>unload mode [driving]</en>
+			<de>Abtankmodus [fahrend]</de>
+			<fr>Déchargement [En marche]</fr>
+		</text>
+		<!--text name="AC_COMBINE_WAITMODE_ON_EXPLANATION">
+			<en>combine discharges while standing</en>
+			<de>Mähdrescher tankt im Stehen ab</de>			
+		</text>
+		<text name="AC_COMBINE_WAITMODE_OFF_EXPLANATION">
+			<en>combine discharges while driving</en>
+			<de>Mähdrescher tankt während der Fahrt ab</de>			
+		</text-->		
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_ON">
+			<en>distance keeper is ON</en>
+			<de>Abstandshalter ist AN </de>
+			<fr>Distance de sécurité On</fr>
+		</text>	
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_OFF">
+			<en>distance keeper is OFF</en>
+			<de>Abstandshalter ist AUS</de>
+			<fr>Distance de sécurité Off</fr>
+		</text>
+		<!--text name="AC_COMBINE_COLLISIONTRIGGER_ON_EXPLANATION">
+			<en>(combine keeps distance from vehicles ahead)</en>
+			<de>(Mähdrescher hält Abstand zu anderen Fahrzeugen)</de>			
+		</text>
+		<text name="AC_COMBINE_COLLISIONTRIGGER_OFF_EXPLANATION">
+			<en>(combine does not keep a distance from vehicles ahead)</en>
+			<de>(Mähdrescher hält keinen Abstand zu anderen Fahrzeugen)</de>			
+		</text-->			
+		<!--AutoCombine help text-->
+		<text name="AC_COMBINE_TEXTHELPPANELOFF">
+			<en>hide AutoCombine info</en>
+			<de>AutoCombine-Info ausschalten</de>
+			<fr>Masquer Infos AutoCombine</fr>
+		</text>	
+		<text name="AC_COMBINE_TEXTHELPPANELON">
+			<en>show AutoCombine info</en>
+			<de>AutoCombine-Info einschalten</de>
+			<fr>Afficher Infos AutoCombine</fr>
+		</text>		
+		<!--AutoCombine inputbinding text-->
+		<text name="AC_COMBINE_HELPPANEL">
+			<en>AutoCombine info ON/OFF</en>
+			<de>AutoCombine-Info AN/AUS</de>
+			<fr>Infos AutoCombine On/Off</fr>
+		</text>
+		<!--text name="AC_COMBINE_STARTSTOP">
+			<en>AutoCombine ON/OFF</en>
+			<de>AutoCombine AN/AUS</de>			
+		</text-->
+		<text name="AC_COMBINE_COLLISION_OTHER">
+			<en>front collision</en>
+			<de>Kollision vorne</de>
+			<fr>Collision frontale</fr>
+		</text>
+		<text name="AC_COMBINE_COLLISION_BACK">
+			<en>back collision</en>
+			<de>Kollision hinten</de>
+			<fr>Collision arrière</fr>
+		</text>
+		<text name="AC_COMBINE_WAITING_WEATHER">
+			<en>waiting for better weahter</en>
+			<de>Warten auf besseres Wetter</de>
+			<fr>Collision arrière</fr>
+		</text>
+		<text name="AC_COMBINE_WAITING_TRAILER">
+			<en>waiting for trailer</en>
+			<de>Warten auf Anhänger</de>
+			<fr>Attente pour remorque</fr>
+		</text>
+		<text name="AC_COMBINE_WAITING_DISCHARGE">
+			<en>waiting for trailer</en>
+			<de>Warten auf Anhänger</de>
+			<fr>Attente pour remorque</fr>
+		</text>
+		<text name="AC_COMBINE_UTURN_ON">
+			<en>AutoCombine mode [up/down]</en>
+			<de>AutoCombine-Modus [auf/ab]</de>
+			<fr>Mode AutoCombine [Haut/Bas]</fr>
+		</text>	
+		<text name="AC_COMBINE_UTURN_OFF">
+			<en>AutoCombine mode [circle]</en>
+			<de>AutoCombine-Modus [Kreisfahrt]</de>	
+			<fr>Mode AutoCombine [cercle]</fr>
+		</text>
+		<text name="AC_COMBINE_REVERSE_ON">
+			<en>turn mode [reverse]</en>
+			<de>Wendemodus [rückwärts]</de>
+			<fr>Virage [manoeuvre]</fr>
+		</text>	
+		<text name="AC_COMBINE_REVERSE_OFF">
+			<en>turn mode [driving]</en>
+			<de>Wendemodus [vorwärts]</de>
+			<fr>Virage [En avançant]</fr>
+		</text>
+		<text name="AC_COMBINE_WIDTH_OFFSET">
+			<en>width offset</en>
+			<de>Offset (Breite)</de>
+			<fr>Offset Larg.</fr>
+		</text>	
+		<text name="AC_COMBINE_TURN_OFFSET">
+			<en>turn offset</en>
+			<de>Offset (Wendemanöver)</de>
+			<fr>Offset virage</fr>
+		</text>
+		<text name="AC_COMBINE_ERROR">
+			<en>error</en>
+			<de>Error</de>
+			<fr>Erreur</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE">
+			<en>go to next turn stage</en>
+			<de>Springe zum nächsten Schritt</de>
+			<fr>Point virage suivant</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_CP_ON">
+			<en>courseplay mode [on]</en>
+			<de>Courseplay-Modus [an]</de>
+			<fr>courseplay mode [on]</fr>
+		</text>
+		<text name="AC_COMBINE_TXT_CP_OFF">
+			<en>courseplay mode [off]</en>
+			<de>Courseplay-Modus [aus]</de>	
+			<fr>courseplay mode [off]</fr>
+		</text>
+		<text name="AC_AUTO_STEER">
+			<en>auto steer</en>
+			<de>Automatische Lenkung</de>
+			<fr>Pilotage auto</fr>
+		</text>
+		<text name="AC_AUTO_STEER_ON">
+			<en>auto steer [on]</en>
+			<de>Autom. Lenkung [an]</de>
+			<fr>Pilotage auto [on]</fr>
+		</text>
+		<text name="AC_AUTO_STEER_OFF">
+			<en>auto steer [off]</en>
+			<de>Autom. Lenkung [aus]</de>
+			<fr>Pilotage auto [off]</fr>
+		</text>
+	 </l10n>
+	</modDesc>
