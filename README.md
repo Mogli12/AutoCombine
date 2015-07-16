@@ -1,4 +1,4 @@
-# AutoCombine for Farminug Simulator 2015
+# AutoCombine for Farming Simulator 2015
 
 ## Motivation
 I do not like maps with rectangular fields. But driving a combine harvester plus the tractor with trailer is a bit tedious in SP mode. 
@@ -11,7 +11,7 @@ The Mod is installed easily in the mod folder.
 It is automatically added in all combines and forage harvesters with normal helper. 
 Thus the combine threshes automatically in circles around the field.
 
-## 
+## How to
 The AutoCombine Hud is opened with the key 5. The helper starts normally using the H key.
 Warning: You must turn on the alternative helper only in Hud. 
 The button is in the 2nd Row far left. Is there a quadrilateral, then only the normal helper is on.
