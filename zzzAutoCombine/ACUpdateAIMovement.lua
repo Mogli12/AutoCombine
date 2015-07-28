@@ -154,6 +154,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		end;
 		allowedToDrive = allowedToDrive and cutterIsLowered
 		if      not allowedToDrive
+				and self.acTurnStage == 0
 				and not ( self:getIsTurnedOn() and cutterIsLowered ) then
 			self.driveBackPosX, self.driveBackPosY, self.driveBackPosZ = getWorldTranslation(self.aiTreshingDirectionNode);
 		end
@@ -358,9 +359,14 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				end;
 			end;
 	
-			local turnAngleRad = AutoCombine.getTurnAngle(self)
-			if self.acParameters.leftAreaActive then
-				turnAngleRad = -turnAngleRad;
+			local turnAngleRad = 0 
+			local limitAngle   = false
+			if self.acTurnStage == 0 and AutoCombine.getTraceLength(self) > 1 then
+			  limitAngle   = ( self.acParameters.upNDown and -3.14 <= turnAngleRad and turnAngleRad <= 3.14 )
+				turnAngleRad = AutoCombine.getTurnAngle(self)
+				if self.acParameters.leftAreaActive then
+					turnAngleRad = -turnAngleRad;
+				end;
 			end;
 			
 			local maxUpDownAngle = 0.52359877559829887307710723054658
@@ -382,10 +388,8 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				
 				for i=1,20 do
 					local a = factor*i*i*self.acDimensions.maxSteeringAngle; 	
-					if self.acTurnStage == 0 and self.acParameters.upNDown and -3.14 <= turnAngleRad and turnAngleRad <= 3.14 then
+					if limitAngle then
 						a = math.max( a, turnAngleRad - maxUpDownAngle )
-						--a = Utils.clamp( a, turnAngleRad - maxUpDownAngle,
-						--										turnAngleRad + maxUpDownAngle )
 					end
 					d = AutoCombine.calculateWidth(self,lookAhead,a);
 					if not self.acParameters.leftAreaActive then d = -d; end;
@@ -430,7 +434,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					end
 				else
 					angle = -self.acDimensions.maxSteeringAngle
-					if self.acTurnStage == 0 and self.acParameters.upNDown and -3.14 <= turnAngleRad and turnAngleRad <= 3.14 then
+					if limitAngle then
 						angle = math.max( angle, turnAngleRad - maxUpDownAngle )
 						--angle = Utils.clamp( angle, turnAngleRad - maxUpDownAngle,
 						--														turnAngleRad + maxUpDownAngle )
@@ -970,11 +974,14 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 --==============================================================				
 -- searching...
 		elseif self.acTurnStage >= 20 and self.acTurnStage <= 22 then
+			AutoCombine.saveDirection( self, false );
 			moveForwards     = true;
 
 		--if self.acFruitsDetected and self.acBorderDetected then
-			if self.acFruitsDetected then
-				AutoCombine.saveDirection( self, false );
+		--if self.acFruitsDetected then
+			if not self.acFruitsDetected then
+				self.turnTimer      = self.acDeltaTimeoutRun;
+			elseif self.turnTimer < 0 then
 				self.acTurnStage    = 0;
 				self.acTurn2Outside = false;
 				self.turnTimer      = self.acDeltaTimeoutNoTurn;
