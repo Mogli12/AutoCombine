@@ -102,26 +102,28 @@ function AutoCombine:load(xmlFile)
 	self.acCenterZ = nil
 	local rotCenterWheel1 = getXMLInt(xmlFile, "vehicle.ackermannSteering#rotCenterWheel1");
 	if rotCenterWheel1 ~= nil and self.wheels[rotCenterWheel1+1] ~= nil then
-		self.acCenterX = self.wheels[rotCenterWheel1+1].positionX;
-		self.acCenterZ = self.wheels[rotCenterWheel1+1].positionZ;
+		self.acCenterX,_,self.acCenterZ = AutoCombine.getRelativeTranslation( self.acRefNode, self.wheels[rotCenterWheel1+1].repr )
+		--self.acCenterX = self.wheels[rotCenterWheel1+1].positionX;
+		--self.acCenterZ = self.wheels[rotCenterWheel1+1].positionZ;
 		local rotCenterWheel2 = getXMLInt(xmlFile, "vehicle.ackermannSteering#rotCenterWheel2");
 		if rotCenterWheel2 ~= nil and self.wheels[rotCenterWheel2+1] ~= nil then
-			self.acCenterX = (self.acCenterX+self.wheels[rotCenterWheel2+1].positionX)*0.5;
-			self.acCenterZ = (self.acCenterZ+self.wheels[rotCenterWheel2+1].positionZ)*0.5;
+			local x,_,z = AutoCombine.getRelativeTranslation( self.acRefNode, self.wheels[rotCenterWheel2+1].repr )
+			self.acCenterX = ( self.acCenterX + x )*0.5 --(self.acCenterX+self.wheels[rotCenterWheel2+1].positionX)*0.5;
+			self.acCenterZ = ( self.acCenterZ + z )*0.5 --(self.acCenterZ+self.wheels[rotCenterWheel2+1].positionZ)*0.5;
 		end
 	else
 		local centerNode, rootNode = Utils.indexToObject(self.components, getXMLString(xmlFile, "vehicle.ackermannSteering#rotCenterNode"));
 		if centerNode ~= nil then
-			self.acCenterX,_,self.acCenterZ = localToLocal(centerNode, rootNode, 0,0,0);
+			self.acCenterX,_,self.acCenterZ = AutoCombine.getRelativeTranslation( self.acRefNode, centerNode )--localToLocal(centerNode, rootNode, 0,0,0);
 		else
 			local p = Utils.getVectorNFromString(getXMLString(xmlFile, "vehicle.ackermannSteering#rotCenter", 2));
 			if p ~= nil then
-				self.acCenterX = p[1];
-				self.acCenterZ = p[2];
+				local x,_,z = AutoCombine.getRelativeTranslation( self.acRefNode, self.rootNode )
+				self.acCenterX = x + p[1];
+				self.acCenterZ = z + p[2];
 			end
 		end
 	end
-	
 	
 end
 
@@ -1162,12 +1164,68 @@ function AutoCombine:calculateDimensions()
 	self.acDimensions.aaAngleFactor   = 0
 	self.acDimensions.maxLookingAngle = 25
 		
-	if self.acCenterZ ~= nil and self.maxTurningRadiusWheel ~= nil and self.maxTurningRadiusWheel > 0 then
+	if self.acCenterZ ~= nil and self.maxTurningRadius ~= nil and self.maxRotation ~= nil then
 		--ackermann steering
 		self.acDimensions.zOffset          = self.acCenterZ
 		self.acDimensions.radius           = self.maxTurningRadius
 		self.acDimensions.maxSteeringAngle = self.maxRotation
-		self.acDimensions.wheelBase        = math.tan( self.maxRotation ) * self.acDimensions.radius
+		
+		local maxSteeringAngle = nil
+		--local c_ws, z_ws, c_wn, z_wn, c_wp, z_wp = 0,0,0,0,0,0
+		for _,wheel in pairs(self.wheels) do
+			local temp1 = { getRotation(wheel.driveNode) }
+			local temp2 = { getRotation(wheel.repr) }
+			setRotation(wheel.driveNode, 0, 0, 0)
+			setRotation(wheel.repr, 0, 0, 0)
+			local x,y,z = AutoCombine.getRelativeTranslation(self.acRefNode,wheel.driveNode)
+			setRotation(wheel.repr, unpack(temp2))
+			setRotation(wheel.driveNode, unpack(temp1))
+			
+			local m = 0
+			if math.abs( wheel.rotSpeed ) > 1E-03 then
+				m = 0.5 * ( math.abs(wheel.rotMin) + math.abs(wheel.rotMax) )
+				if maxSteeringAngle == nil or maxSteeringAngle < m then
+					maxSteeringAngle = m
+				end
+			end
+			
+		--	local f = 1 --math.abs( wheel.restLoad )
+		--	
+		--	if math.abs( wheel.rotSpeed ) < 1E-03 or m < 1E-04 then
+		--		z_wn = z_wn + f * z
+		--		c_wn = c_wn + f
+		--	elseif wheel.rotSpeed < 0 then
+		--		z_ws = z_ws + f * z
+		--		c_ws = c_ws + f
+		--	else
+		--		z_wp = z_wp + f * z
+		--		c_wp = c_wp + f
+		--	end
+		end
+
+		
+		--if c_ws > 1e-3 and math.abs( c_ws - 1) > 1e-3 then z_ws = z_ws / c_ws end
+		--if c_wn > 1e-3 and math.abs( c_wn - 1) > 1e-3 then z_wn = z_wn / c_wn end
+		--if c_wp > 1e-3 and math.abs( c_wp - 1) > 1e-3 then z_wp = z_wp / c_wp end
+		--
+		--print(string.format("Ackermann: %0.3f / %0.3f %0.3f / %0.3f %0.3f / %0.3f %0.3f / %0.3f° %0.3f°", self.acCenterZ, z_ws, c_ws, z_wn, c_wn, z_wp, c_wp, math.deg( maxSteeringAngle ), math.deg( self.acDimensions.maxSteeringAngle ) ))
+		
+		if maxSteeringAngle ~= nil then
+			self.acDimensions.maxSteeringAngle = maxSteeringAngle
+		end
+		self.acDimensions.wheelBase = math.max( 0, math.tan( self.acDimensions.maxSteeringAngle ) ) * self.acDimensions.radius
+		
+		if      self.articulatedAxis ~= nil 
+				and self.articulatedAxis.componentJoint ~= nil
+				and self.articulatedAxis.componentJoint.jointNode ~= nil 
+				and self.articulatedAxis.rotMax then
+			-- Ropa
+			local x,y,z = AutoCombine.getRelativeTranslation( self.acRefNode, self.articulatedAxis.componentJoint.jointNode )
+			self.acDimensions.aaDistance    = self.acDimensions.cutterDistance - z
+			self.acDimensions.aaAngle       = self.articulatedAxis.rotMax
+			self.acDimensions.aaAngleFactor = self.acDimensions.aaAngle / self.acDimensions.maxSteeringAngle
+		--self.acDimensions.zOffset       = z
+		end
 	else
 		local m_ws, c_ws, z_ws, m_wn, c_wn, z_wn, m_wp, c_wp, z_wp = 0,0,0,0,0,0,0,0,0
 		self.acDimensions.maxSteeringAngle = math.rad(1)
@@ -1180,30 +1238,23 @@ function AutoCombine:calculateDimensions()
 			setRotation(wheel.repr, unpack(temp2))
 			setRotation(wheel.driveNode, unpack(temp1))
 			
+			local m = 0
 			if math.abs( wheel.rotSpeed ) > 1E-03 then
-				local m = math.min(math.abs(wheel.rotMin),math.abs(wheel.rotMax))
+				m = 0.5 * ( math.abs(wheel.rotMin) + math.abs(wheel.rotMax) )
 				if m > 0 then
 					self.acDimensions.maxSteeringAngle = math.max( self.acDimensions.maxSteeringAngle, m )			
 				end
 			end
 			
-			local f = 1 --math.abs( wheel.restLoad )
-			
-			if     wheel.rotSpeed < -1E-03 then
-				if c_ws < 1 then z_ws = z else z_ws = math.min(z_ws,z) end
-				c_ws = 1
-				--z_ws = z_ws + f * z
-				--c_ws = c_ws + f
-			elseif wheel.rotSpeed <= 1E-03 then
+			if math.abs( wheel.rotSpeed ) < 1E-03 or m < 1E-04 then
 				if c_wn < 1 then z_wn = z else z_wn = math.max(z_wn,z) end
 				c_wn = 1
-				--z_wn = z_wn + f * z
-				--c_wn = c_wn + f
+			elseif wheel.rotSpeed < 0 then
+				if c_ws < 1 then z_ws = z else z_ws = math.min(z_ws,z) end
+				c_ws = 1
 			else
 				if c_wp < 1 then z_wp = z else z_wp = math.max(z_wp,z) end
 				c_wp = 1
-				--z_wp = z_wp + f * z
-				--c_wp = c_wp + f
 			end
 		end
 
@@ -1267,20 +1318,10 @@ function AutoCombine:calculateDistances()
 	self.acDimensions.insideDistance  = math.max(0, self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor ) )
 	
 	if self.acDimensions.aaAngle > 1E-6 then
+		self.acDimensions.uTurnRefAngle	  = -120
 		self.acDimensions.maxLookingAngle = math.min( self.acDimensions.maxLookingAngle, self.acDimensions.aaAngle )
 		self.acDimensions.uTurnDistance   = 1.2 * self.acDimensions.cutterDistance + self.acDimensions.distance
 		self.acDimensions.uTurnDistance2  = self.acDimensions.cutterDistance + 0.7 * math.sin( self.articulatedAxis.rotMax ) * self.acDimensions.aaDistance
-	else
-		self.acDimensions.uTurnDistance   = 2 + math.max(self.acDimensions.cutterDistance) + math.max(0,self.acDimensions.distance - self.acDimensions.radius)
-		self.acDimensions.uTurnDistance2  = self.acDimensions.uTurnDistance --math.max(1, self.acDimensions.cutterDistance + 1 + self.acDimensions.distance - self.acDimensions.radius )
-	end
-	
-	self.acDimensions.insideDistance  = math.max( 0, self.acDimensions.insideDistance + self.acParameters.turnOffset )
-  self.acDimensions.uTurnDistance   = math.max( 1, self.acDimensions.uTurnDistance  + self.acParameters.turnOffset )
-  self.acDimensions.uTurnDistance2  = math.max( 1, self.acDimensions.uTurnDistance2 + self.acParameters.turnOffset )
-	
-	if self.acDimensions.aaAngleFactor > 1E-6 then
-		self.acDimensions.uTurnRefAngle	= -120
 	else
 		local ref = -100				
 		local a0  = math.deg(self.acDimensions.maxLookingAngle)-180
@@ -1300,8 +1341,19 @@ function AutoCombine:calculateDistances()
 			end
 		end
 		
-		self.acDimensions.uTurnRefAngle	= ref
+		self.acDimensions.uTurnRefAngle	  = ref
+		
+		local a = math.rad( 180 + ref ) - self.acDimensions.maxLookingAngle
+		
+		self.acDimensions.uTurnDistance   = 2 + math.max(0,self.acDimensions.cutterDistance) + math.max(0,self.acDimensions.distance - self.acDimensions.radius) + 0.258 * self.acDimensions.distance
+		self.acDimensions.uTurnDistance2  = self.acDimensions.uTurnDistance - math.sin( math.max( 0, a ) ) * self.acDimensions.radius
+		--math.max(1, self.acDimensions.cutterDistance + 1 + self.acDimensions.distance - self.acDimensions.radius )
 	end
+	
+	self.acDimensions.insideDistance  = math.max( 0, self.acDimensions.insideDistance + self.acParameters.turnOffset )
+  self.acDimensions.uTurnDistance   = math.max( 1, self.acDimensions.uTurnDistance  + self.acParameters.turnOffset )
+  self.acDimensions.uTurnDistance2  = math.max( 1, self.acDimensions.uTurnDistance2 + self.acParameters.turnOffset )
+	
 --print(string.format("a1=%i a2=%i cd=%f di=%f rd=%f wb=%f id=%f ud=%f ud2=%f",math.deg(self.acDimensions.maxSteeringAngle),math.deg(self.acDimensions.maxLookingAngle),self.acDimensions.cutterDistance,self.acDimensions.xLeft,self.acDimensions.radius,self.acDimensions.wheelBase,self.acDimensions.insideDistance,self.acDimensions.uTurnDistance,self.acDimensions.uTurnDistance2 	))
 end
 

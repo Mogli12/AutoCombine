@@ -835,7 +835,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 						dist = self.acDimensions.uTurnDistance;
 					end;
 
-					if AutoCombine.getTurnDistance(self) > dist then
+					if not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > dist then
 						--AICombine.setAIImplementsMoveDown(self,true);
 						self.acTurnStage = 17;
 						self.lastTurnAngle = math.deg(AutoCombine.getTurnAngle(self));					
@@ -1055,11 +1055,12 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					--invert turn angle because we will swap left/right in about 10 lines
 					turnAngle = -turnAngle;
 					if self.acParameters.noReverse then
-						self.acTurn2Outside = turnAngle < self.acDimensions.uTurnAngle;
-					elseif self.acIsCPCombine then
-						self.acTurn2Outside = math.deg(turnAngle) < -3;					
+						self.acTurn2Outside = true --turnAngle < self.acDimensions.uTurnAngle
+				--elseif self.acIsCPCombine then
+				--	self.acTurn2Outside = math.deg(turnAngle) < -3;					
 					else
-						self.acTurn2Outside = AutoCombine.getTurnDistance(self) <= self.acDimensions.uTurnDistance2;
+				--	self.acTurn2Outside = AutoCombine.getTurnDistance(self) <= self.acDimensions.uTurnDistance2;
+						self.acTurn2Outside = math.deg(turnAngle) < -3;					
 					end;
 					self.acTurnStage = 11;
 					self.turnTimer = self.acDeltaTimeoutWait;
