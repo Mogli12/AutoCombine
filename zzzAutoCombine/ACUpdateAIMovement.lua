@@ -978,10 +978,10 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			moveForwards     = true;
 
 		--if self.acFruitsDetected and self.acBorderDetected then
-		--if self.acFruitsDetected then
-			if not self.acFruitsDetected then
-				self.turnTimer      = self.acDeltaTimeoutRun;
-			elseif self.turnTimer < 0 then
+			if self.acFruitsDetected then
+		--if not self.acFruitsDetected then
+		--	self.turnTimer      = self.acDeltaTimeoutRun;
+		--elseif self.turnTimer < 0 then
 				self.acTurnStage    = 0;
 				self.acTurn2Outside = false;
 				self.turnTimer      = self.acDeltaTimeoutNoTurn;
