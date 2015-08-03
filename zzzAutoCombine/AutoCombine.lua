@@ -95,7 +95,24 @@ function AutoCombine:load(xmlFile)
       and self.articulatedAxis.componentJoint.jointNode ~= nil 
 			and self.articulatedAxis.rotMax then	
 		self.acRefNode = self.components[self.articulatedAxis.componentJoint.componentIndices[2]].node
+	--self.acRefNode = getParent( self.articulatedAxis.componentJoint.jointNode )
+		self.acRefNodeCorr = createTransformGroup( "acRefNodeCorr" )
+		link( getParent( self.articulatedAxis.componentJoint.jointNode ), self.acRefNodeCorr )
+		setTranslation( self.acRefNodeCorr, 0, 0, 0 )
+		setRotation( self.acRefNodeCorr, 0, 0, 0 )
+	else
+		self.acRefNodeCorr = self.acRefNode
 	end
+	
+	self.acTransNode = createTransformGroup( "acTransNode" )
+	self.acRotNode   = createTransformGroup( "acRotNode" )
+	link( self.acRefNodeCorr, self.acTransNode )
+	link( self.acTransNode, self.acRotNode )
+	setTranslation( self.acTransNode, 0, 0, 0 )
+	setTranslation( self.acRotNode, 0, 0, 0 )
+	setRotation( self.acTransNode, 0, 0, 0 )
+	setRotation( self.acRotNode, 0, 0, 0 )
+
 
 	-- ackermann steering
 	self.acCenterX = nil
@@ -618,6 +635,30 @@ function AutoCombine:update(dt)
 			drawDebugArrow(x0,y0,z0,x1,0,z1,x1,0,z1,1,0,0)
 			drawDebugArrow(x0,y0+1,z0,x1,0,z1,x1,0,z1,1,0,0)
 			drawDebugArrow(x0,y0+1,z0,0,-1,0,0,-1,0,1,0,0)
+			
+		--x0,y0,z0 = getWorldTranslation( self.acRotNode )
+		--x1,y1,z1 = localDirectionToWorld( self.acRotNode, 0,0,l) 
+		--
+		--drawDebugArrow(x0,y0,z0,x1,0,z1,x1,0,z1,0,0,1)
+		--drawDebugArrow(x0,y0+1,z0,x1,0,z1,x1,0,z1,0,0,1)
+		--drawDebugArrow(x0,y0+1,z0,0,-1,0,0,-1,0,0,0,1)
+		--
+		--local xl, zl = AutoCombine.getTurnVector( self )
+		--x0,y0,z0 = localToWorld( self.acRotNode, xl, 0, zl )
+		--
+		--drawDebugArrow(x0,y0+1,z0,0,-1,0,0,-1,0,0,1,0)
+		end
+	end
+	
+	if      self.acDimensions           ~= nil  
+			and self.acDimensions.aaAngle   ~= nil
+			and self.acDimensions.wheelBase ~= nil
+			and self.acDimensions.aaAngle   > 1E-6 then
+		local _,angle,_ = getRotation( self.articulatedAxis.componentJoint.jointNode );
+		if self.acLastAcRefNodeAngle == nil or math.abs( angle - self.acLastAcRefNodeAngle ) > 1e-6 then
+			self.acLastAcRefNodeAngle = angle
+			setRotation( self.acRefNodeCorr, 0, 0.2 * angle, 0 )
+			setTranslation( self.acRefNodeCorr, -0.5 * self.acDimensions.wheelBase * math.sin( angle ), 0, 0 )
 		end
 	end
 
@@ -808,7 +849,7 @@ function AutoCombine:startAIThreshing(noEventSend)
 		AutoCombine.initMogliHud(self)
 		self.realForceAiDriven = true
 		self.acDimensions  = nil
-		self.acTurnStage   = 22
+		self.acTurnStage   = -3
 		self.turnTimer     = self.acDeltaTimeoutWait
 		self.aiRescueTimer = self.acDeltaTimeoutStop
 		self.waitForTurnTime = 0
@@ -1292,6 +1333,8 @@ function AutoCombine:calculateDimensions()
 	end
 	
 	self.acDimensions.cutterDistance  = self.acDimensions.cutterDistance - self.acDimensions.zOffset
+
+	setTranslation( self.acTransNode, 0, 0, self.acDimensions.zOffset )
 	
 	AutoCombine.calculateDistances(self)
 end
@@ -1321,7 +1364,6 @@ function AutoCombine:calculateDistances()
 		self.acDimensions.uTurnRefAngle	  = -120
 		self.acDimensions.maxLookingAngle = math.min( self.acDimensions.maxLookingAngle, self.acDimensions.aaAngle )
 		self.acDimensions.uTurnDistance   = 1.2 * self.acDimensions.cutterDistance + self.acDimensions.distance
-		self.acDimensions.uTurnDistance2  = self.acDimensions.cutterDistance + 0.7 * math.sin( self.articulatedAxis.rotMax ) * self.acDimensions.aaDistance
 	else
 		local ref = -100				
 		local a0  = math.deg(self.acDimensions.maxLookingAngle)-180
@@ -1346,13 +1388,27 @@ function AutoCombine:calculateDistances()
 		local a = math.rad( 180 + ref ) - self.acDimensions.maxLookingAngle
 		
 		self.acDimensions.uTurnDistance   = 2 + math.max(0,self.acDimensions.cutterDistance) + math.max(0,self.acDimensions.distance - self.acDimensions.radius) + 0.258 * self.acDimensions.distance
-		self.acDimensions.uTurnDistance2  = self.acDimensions.uTurnDistance - math.sin( math.max( 0, a ) ) * self.acDimensions.radius
 		--math.max(1, self.acDimensions.cutterDistance + 1 + self.acDimensions.distance - self.acDimensions.radius )
 	end
+  
+	local width = 1.5
+	
+	--                                  distance from marker to border - width/2 - innerRadius * ( 1 - sin(60°) )
+	self.acDimensions.uTurnDistance2  = self.acDimensions.cutterDistance - width - math.max( 0, self.acDimensions.radius - width ) * 0.134
+	
+	if     self.acDimensions.distance <= width then
+		self.acDimensions.uTurnDistance2  = self.acDimensions.cutterDistance
+	elseif self.acDimensions.distance < self.acDimensions.radius then
+		-- avoid driving through fruits with Pythagoras for the inner radius
+		local r2 = math.max( 0, self.acDimensions.radius - width ) ^2
+		local d2 = ( self.acDimensions.radius - self.acDimensions.distance )^2		
+		self.acDimensions.uTurnDistance2 = math.max( self.acDimensions.uTurnDistance2, self.acDimensions.cutterDistance - math.sqrt( r2 - d2 ) )
+	end
+	
 	
 	self.acDimensions.insideDistance  = math.max( 0, self.acDimensions.insideDistance + self.acParameters.turnOffset )
-  self.acDimensions.uTurnDistance   = math.max( 1, self.acDimensions.uTurnDistance  + self.acParameters.turnOffset )
-  self.acDimensions.uTurnDistance2  = math.max( 1, self.acDimensions.uTurnDistance2 + self.acParameters.turnOffset )
+  self.acDimensions.uTurnDistance   = math.max( 1, self.acDimensions.uTurnDistance  + self.acParameters.turnOffset )	
+  self.acDimensions.uTurnDistance2  = 1.0 + self.acDimensions.uTurnDistance2 + self.acParameters.turnOffset
 	
 --print(string.format("a1=%i a2=%i cd=%f di=%f rd=%f wb=%f id=%f ud=%f ud2=%f",math.deg(self.acDimensions.maxSteeringAngle),math.deg(self.acDimensions.maxLookingAngle),self.acDimensions.cutterDistance,self.acDimensions.xLeft,self.acDimensions.radius,self.acDimensions.wheelBase,self.acDimensions.insideDistance,self.acDimensions.uTurnDistance,self.acDimensions.uTurnDistance2 	))
 end
@@ -1403,8 +1459,8 @@ function AutoCombine:saveDirection( cumulate )
 
 	if cumulate then
 		local vector = {}	
-		vector.dx,_,vector.dz = localDirectionToWorld( self.acRefNode, 0,0,1 )
-		vector.px,_,vector.pz = getWorldTranslation( self.acRefNode )
+		vector.dx,_,vector.dz = localDirectionToWorld( self.acRefNodeCorr, 0,0,1 )
+		vector.px,_,vector.pz = getWorldTranslation( self.acRefNodeCorr )
 		
 		if self.acDirectionBeforeTurn.traceIndex == nil then
 			self.acDirectionBeforeTurn.trace = {}
@@ -1444,7 +1500,7 @@ function AutoCombine:saveDirection( cumulate )
 				lz = self.acDimensions.zLeft
 			end
 	
-			local x,_,z = localToWorld( self.acRefNode, lx, 0, lz )
+			local x,_,z = localToWorld( self.acRefNodeCorr, lx, 0, lz )
 			
 			if Utils.getFruitArea(self.lastValidInputFruitType, x-1,z-1,x+1,z-1,x-1,z+1, hasFruitPreparer) > 0 then	
 				self.acDirectionBeforeTurn.tx = x
@@ -1454,8 +1510,10 @@ function AutoCombine:saveDirection( cumulate )
 	else
 		self.acDirectionBeforeTurn.trace = {}
 		self.acDirectionBeforeTurn.traceIndex = 0
-		self.acDirectionBeforeTurn.sx, _, self.acDirectionBeforeTurn.sz = getWorldTranslation( self.acRefNode )
+		self.acDirectionBeforeTurn.sx, _, self.acDirectionBeforeTurn.sz = getWorldTranslation( self.acRefNodeCorr )
 	end
+	
+	self.acDirectionBeforeTurn.trx, self.acDirectionBeforeTurn.try, self.acDirectionBeforeTurn.trz = getWorldTranslation( self.acRotNode )
 end
 
 ------------------------------------------------------------------------
@@ -1480,16 +1538,66 @@ end
 -- getTurnDistance
 ------------------------------------------------------------------------
 function AutoCombine:getTurnDistance()
-	if     self.acRefNode               == nil
+	if     self.acRefNodeCorr           == nil
 			or self.acDirectionBeforeTurn   == nil
 			or self.acDirectionBeforeTurn.x == nil
 			or self.acDirectionBeforeTurn.z == nil then
 		return 0
 	end
-	local x,_,z = getWorldTranslation( self.acRefNode )
+	local x,_,z = getWorldTranslation( self.acRefNodeCorr )
 	x = x - self.acDirectionBeforeTurn.x
 	z = z - self.acDirectionBeforeTurn.z
 	return math.sqrt( x*x + z*z )
+end
+
+------------------------------------------------------------------------
+-- getTurnVector
+------------------------------------------------------------------------
+function AutoCombine:getTurnVector()
+	if     self.acRefNodeCorr             == nil
+			or self.acDirectionBeforeTurn     == nil
+			or self.acDirectionBeforeTurn.trx == nil
+			or self.acDirectionBeforeTurn.try == nil
+			or self.acDirectionBeforeTurn.trz == nil then
+		return 0, 0
+	end
+
+	setRotation( self.acRotNode, 0, -AutoCombine.getTurnAngle( self ), 0 )
+	
+	local x,_,z = worldToLocal( self.acRotNode, self.acDirectionBeforeTurn.trx, self.acDirectionBeforeTurn.try, self.acDirectionBeforeTurn.trz )
+	
+	return x, z
+end
+
+------------------------------------------------------------------------
+-- getTurnDistanceX
+------------------------------------------------------------------------
+function AutoCombine:getTurnDistanceX()
+	local x, z = AutoCombine.getTurnVector( self )
+	if self.acParameters.leftAreaActive then
+		x = -x
+	end
+	return x
+	--if     self.acRefNode               == nil
+	--		or self.acDirectionBeforeTurn   == nil
+	--		or self.acDirectionBeforeTurn.x == nil
+	--		or self.acDirectionBeforeTurn.z == nil then	
+	--	return 0
+	--end
+	--
+	--local _,_,z = worldToLocal( self.acRefNode, self.acDirectionBeforeTurn.x, 0, self.acDirectionBeforeTurn.z )
+	--if not self.acParameters.leftAreaActive then
+	--	z = -z
+	--end
+	--return z
+end
+
+------------------------------------------------------------------------
+-- getTurnDistanceZ
+------------------------------------------------------------------------
+function AutoCombine:getTurnDistanceZ()
+	local x, z = AutoCombine.getTurnVector( self )
+	return -z
 end
 
 ------------------------------------------------------------------------
@@ -1537,9 +1645,14 @@ function AutoCombine.getTurnAngle( self )
 		self.acDirectionBeforeTurn.a = Utils.getYRotationFromDirection(vx/l,vz/l)
 	end
 
-	local x,y,z = localDirectionToWorld( self.acRefNode, 0,0,1 )
+	local x,y,z = localDirectionToWorld( self.acRefNodeCorr, 0,0,1 )
 	
 	local angle = Utils.getYRotationFromDirection(x,z) - self.acDirectionBeforeTurn.a
+	
+--if self.acDimensions.aaAngle > 1E-6 then
+--	angle = angle + 0.5 * self.articulatedAxis.curRot
+--end
+	
 	while angle < math.pi do 
 		angle = angle+math.pi+math.pi 
 	end
