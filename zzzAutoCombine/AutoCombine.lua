@@ -599,7 +599,8 @@ function AutoCombine:update(dt)
 			and self.isEntered 
 			and self.isClient 
 			and self:getIsActive() 
-			and self.acParameters.enabled then
+			and self.acParameters.enabled
+			and self:canStartAIThreshing() then
 			
 		AutoCombine.calculateDimensions(self)	
 		if self.acDimensions ~= nil then				

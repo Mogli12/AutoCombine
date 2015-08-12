@@ -1331,6 +1331,16 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		self.turnStage = 4
 	elseif self.acTurnStage >= 18 and self.acTurnStage <= 19 then
 		self.turnStage = 5		
+		
+	elseif self.acTurnStage >= 21 and self.acTurnStage <= 23 then
+		self.turnStage = 1
+	elseif self.acTurnStage >= 24 and self.acTurnStage <= 25 then
+		self.turnStage = 2
+	elseif self.acTurnStage >= 26 and self.acTurnStage <= 29 then
+		self.turnStage = 4
+	elseif self.acTurnStage >= 30 and self.acTurnStage <= 32 then
+		self.turnStage = 5		
+		
 	else
 		self.turnStage = 0
 	end
