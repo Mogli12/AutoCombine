@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="23">
     <author>Mogli</author>
-    <version>4.0.9.0</version>
+    <version>4.0.9.1</version>
     <title>
         <en>Auto Combine</en>
         <de>Automatisch Mähdreschen</de>
-		<fr>Auto Combine</fr>
-		<it>Auto Combine</it>
+		<fr>Auto Combine - French traduction by Waylan</fr>
+		<it>Auto Combine - Traduzione italiana by Cristiano Magro</it>
     </title>
     <description>
         <en>
@@ -33,233 +33,12 @@
 		<input name="AC_AUTO_STEER"           category="VEHICLE" key1="KEY_lctrl KEY_6" key2="" button="" device="0" mouse="" />
 	</inputBindings>
 	
-	<l10n>
-		<!--AutoCombine helpPanel text-->
+	<l10n filenamePrefix="modDesc_l10n">
 		<text name="AC_COMBINE_VERSION">
-			<en>AutoCombine v4.1 b</en>
-			<de>AutoCombine v4.1 b</de>
-			<fr>AutoCombine v4.1 b</fr>
-			<it>AutoCombine v4.1 b</it>
+			<en>AutoCombine v4.1 b1</en>
+			<de>AutoCombine v4.1 b1</de>
+			<fr>AutoCombine v4.1 b1</fr>
+			<it>AutoCombine v4.1 b1</it>
 		</text>
-		<text name="AC_COMBINE_TXT_START">
-			<en>AutoCombine on</en>
-			<de>Alternativer Helfer</de>
-			<fr>AutoCombine On</fr>			
-			<it>AutoCombine On</it>			
-		</text>
-		<text name="AC_COMBINE_TXT_STOP">
-			<en>AutoCombine off</en>
-			<de>Normaler Helfer</de>
-			<fr>AutoCombine Off</fr>
-			<it>AutoCombine Off</it>
-		</text>
-		<text name="AC_COMBINE_TXT_WORKWIDTH">
-			<en>workwidth:</en>
-			<de>Arbeitsbreite:</de>
-			<fr>Larg. travail:</fr>
-			<it>Larg. lavoro:</it>
-		</text>
-		<text name="AC_COMBINE_SWAP_SIDE">
-			<en>swap left/right</en>
-			<de>Tausche aktive Seite</de>
-			<fr>Permut. gauche/droite</fr>
-			<it>Scambia sinistra/destra</it>
-		</text>		
-		<text name="AC_COMBINE_ENABLE">
-			<en>AutoCombine ON/OFF</en>
-			<de>AutoCombine AN/AUS</de>
-			<fr>AutoCombine On/Off</fr>
-			<it>AutoCombine On/Off</it>
-		</text>
-		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT">
-			<en>active side: LEFT</en>
-			<de>Aktive Seite: LINKS</de>
-			<fr>Côté actif: Gauche</fr>
-			<it>attiva lato: sinistro</it>
-		</text>
-		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT">
-			<en>active side: RIGHT</en>
-			<de>Aktive Seite: RECHTS</de>
-			<fr>Côté actif: Droit</fr>
-			<it>attiva lato: destro</it>
-		</text>		
-
-		<text name="AC_COMBINE_WAITMODE_ON">
-			<en>unload mode [standing]</en>
-			<de>Abtankmodus [stehend]</de>
-			<fr>Déchargement [A l'arrêt]</fr>
-			<it>Modo scarico [fermo]</it>
-		</text>	
-		<text name="AC_COMBINE_WAITMODE_OFF">
-			<en>unload mode [driving]</en>
-			<de>Abtankmodus [fahrend]</de>
-			<fr>Déchargement [En marche]</fr>
-			<it>Modo scarico [in movimento]</it>
-		</text>
-		<!--text name="AC_COMBINE_WAITMODE_ON_EXPLANATION">
-			<en>combine discharges while standing</en>
-			<de>Mähdrescher tankt im Stehen ab</de>			
-			<it>Combine scarica mentre è ferma</it>
-		</text>
-		<text name="AC_COMBINE_WAITMODE_OFF_EXPLANATION">
-			<en>combine discharges while driving</en>
-			<de>Mähdrescher tankt während der Fahrt ab</de>			
-			<it>Combine scarica mentre è in movimento</it>
-		</text-->		
-		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_ON">
-			<en>distance keeper is ON</en>
-			<de>Abstandshalter ist AN </de>
-			<fr>Distance de sécurité On</fr>
-			<it>Mantieni la distanza è On</it>
-		</text>	
-		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_OFF">
-			<en>distance keeper is OFF</en>
-			<de>Abstandshalter ist AUS</de>
-			<fr>Distance de sécurité Off</fr>
-			<it>Mantieni la distanza è Off</it>
-		</text>
-		<!--text name="AC_COMBINE_COLLISIONTRIGGER_ON_EXPLANATION">
-			<en>(combine keeps distance from vehicles ahead)</en>
-			<de>(Mähdrescher hält Abstand zu anderen Fahrzeugen)</de>			
-			<en>(combine mantiene la distanza dal veicolo davanti)</en>
-		</text>
-		<text name="AC_COMBINE_COLLISIONTRIGGER_OFF_EXPLANATION">
-			<en>(combine does not keep a distance from vehicles ahead)</en>
-			<de>(Mähdrescher hält keinen Abstand zu anderen Fahrzeugen)</de>			
-			<en>(combine non mantiene la distanza dal veicolo davanti)</en>
-		</text-->			
-		<!--AutoCombine help text-->
-		<text name="AC_COMBINE_TEXTHELPPANELOFF">
-			<en>hide AutoCombine info</en>
-			<de>AutoCombine-Info ausschalten</de>
-			<fr>Masquer Infos AutoCombine</fr>
-			<it>nascondi dettagli AutoCombine</it>
-		</text>	
-		<text name="AC_COMBINE_TEXTHELPPANELON">
-			<en>show AutoCombine info</en>
-			<de>AutoCombine-Info einschalten</de>
-			<fr>Afficher Infos AutoCombine</fr>
-			<it>mostra dettagli AutoCombine</it>
-		</text>		
-		<!--AutoCombine inputbinding text-->
-		<text name="AC_COMBINE_HELPPANEL">
-			<en>AutoCombine info ON/OFF</en>
-			<de>AutoCombine-Info AN/AUS</de>
-			<fr>Infos AutoCombine On/Off</fr>
-			<it>Dettagli AutoCombine On/Off</it>
-		</text>
-		<!--text name="AC_COMBINE_STARTSTOP">
-			<en>AutoCombine ON/OFF</en>
-			<de>AutoCombine AN/AUS</de>			
-			<it>AutoCombine ON/OFF</it>
-		</text-->
-		<text name="AC_COMBINE_COLLISION_OTHER">
-			<en>front collision</en>
-			<de>Kollision vorne</de>
-			<fr>Collision frontale</fr>
-			<it>Collisioni frontali</it>
-		</text>
-		<text name="AC_COMBINE_COLLISION_BACK">
-			<en>back collision</en>
-			<de>Kollision hinten</de>
-			<fr>Collision arrière</fr>
-			<it>Collisioni posteriori</it>
-		</text>
-		<text name="AC_COMBINE_WAITING_WEATHER">
-			<en>waiting for better weahter</en>
-			<de>Warten auf besseres Wetter</de>
-			<fr>Collision arrière</fr>
-			<it>In attesa di un tempo migliore</it>
-		</text>
-		<text name="AC_COMBINE_WAITING_TRAILER">
-			<en>waiting for trailer</en>
-			<de>Warten auf Anhänger</de>
-			<fr>Attente pour remorque</fr>
-			<it>In attesa di un rimorchio</it>
-		</text>
-		<text name="AC_COMBINE_WAITING_DISCHARGE">
-			<en>waiting for trailer</en>
-			<de>Warten auf Anhänger</de>
-			<fr>Attente pour remorque</fr>
-			<it>In attesa di un rimorchio</it>
-		</text>
-		<text name="AC_COMBINE_UTURN_ON">
-			<en>AutoCombine mode [up/down]</en>
-			<de>AutoCombine-Modus [auf/ab]</de>
-			<fr>Mode AutoCombine [Haut/Bas]</fr>
-			<it>Modo AutoCombine [Su/Giù]</it>
-		</text>	
-		<text name="AC_COMBINE_UTURN_OFF">
-			<en>AutoCombine mode [circle]</en>
-			<de>AutoCombine-Modus [Kreisfahrt]</de>	
-			<fr>Mode AutoCombine [cercle]</fr>
-			<it>Modo AutoCombine [cerchio]</it>
-		</text>
-		<text name="AC_COMBINE_REVERSE_ON">
-			<en>turn mode [reverse]</en>
-			<de>Wendemodus [rückwärts]</de>
-			<fr>Virage [manoeuvre]</fr>
-			<it>In manovra [svoltando]</it>
-		</text>	
-		<text name="AC_COMBINE_REVERSE_OFF">
-			<en>turn mode [driving]</en>
-			<de>Wendemodus [vorwärts]</de>
-			<fr>Virage [En avançant]</fr>
-			<it>In manovra [movimento]</it>
-		</text>
-		<text name="AC_COMBINE_WIDTH_OFFSET">
-			<en>width offset</en>
-			<de>Offset (Breite)</de>
-			<fr>Offset Larg.</fr>
-			<it>Larg. scostamento</it>
-		</text>	
-		<text name="AC_COMBINE_TURN_OFFSET">
-			<en>turn offset</en>
-			<de>Offset (Wendemanöver)</de>
-			<fr>Offset virage</fr>
-			<it>Svolta Offset</it>
-		</text>
-		<text name="AC_COMBINE_ERROR">
-			<en>error</en>
-			<de>Error</de>
-			<fr>Erreur</fr>
-			<it>errore</it>
-		</text>
-		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE">
-			<en>go to next turn stage</en>
-			<de>Springe zum nächsten Schritt</de>
-			<fr>Point virage suivant</fr>
-			<it>vai prossimo turno di svolta</it>
-		</text>
-		<text name="AC_COMBINE_TXT_CP_ON">
-			<en>courseplay mode [on]</en>
-			<de>Courseplay-Modus [an]</de>
-			<fr>courseplay mode [on]</fr>
-			<it>Courseplay mode [on]</it>
-		</text>
-		<text name="AC_COMBINE_TXT_CP_OFF">
-			<en>courseplay mode [off]</en>
-			<de>Courseplay-Modus [aus]</de>	
-			<fr>courseplay mode [off]</fr>
-			<it>Courseplay mode [off]</it>
-		</text>
-		<text name="AC_AUTO_STEER">
-			<en>auto steer</en>
-			<de>Automatische Lenkung</de>
-			<fr>Pilotage auto</fr>
-			<it>Sterzo automatico</it>
-		</text>
-		<text name="AC_AUTO_STEER_ON">
-			<en>auto steer [on]</en>
-			<de>Autom. Lenkung [an]</de>
-			<fr>Pilotage auto [on]</fr>
-			<it>Sterzo automatico [on]</it>
-		</text>
-		<text name="AC_AUTO_STEER_OFF">
-			<en>auto steer [off]</en>
-			<de>Autom. Lenkung [aus]</de>
-			<fr>Pilotage auto [off]</fr>
-			<it>Sterzo automatico [off]</it>
-		</text>
-	 </l10n>
-	</modDesc>
+	</l10n>
+</modDesc>

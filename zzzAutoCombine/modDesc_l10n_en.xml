@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<!-- Note that 'description' is only here for easier translations. It needs to be manually copied to ModDesc.XML later. -->
+	<description><![CDATA[Auto Combine]]></description>
+
+	<texts>
+		<!--AutoCombine helpPanel text-->
+		<text name="AC_COMBINE_TXT_START"                           text="AutoCombine on"/>
+		<text name="AC_COMBINE_TXT_STOP"                            text="AutoCombine off"/>
+		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="workwidth:"/>
+		<text name="AC_COMBINE_SWAP_SIDE"                           text="swap left/right"/>
+		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine ON/OFF"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="active side: LEFT"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="active side: RIGHT"/>
+
+		<text name="AC_COMBINE_WAITMODE_ON"                         text="unload mode [standing]"/>
+		<text name="AC_COMBINE_WAITMODE_OFF"                        text="unload mode [driving]"/>
+		<!--<text name="AC_COMBINE_WAITMODE_ON_EXPLANATION"         text="combine discharges while standing"/>
+		<text name="AC_COMBINE_WAITMODE_OFF_EXPLANATION"            text="combine discharges while driving"/>-->		
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_ON"             text="distance keeper is ON"/>
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_OFF"            text="distance keeper is OFF"/>
+		<!--<text name="AC_COMBINE_COLLISIONTRIGGER_ON_EXPLANATION" text="(combine keeps distance from vehicles ahead)"/>
+		<text name="AC_COMBINE_COLLISIONTRIGGER_OFF_EXPLANATION"    text="(combine does not keep a distance from vehicles ahead)"/>-->			
+			
+		<!--AutoCombine help text-->
+		<text name="AC_COMBINE_TEXTHELPPANELOFF"                    text="hide AutoCombine info"/>
+		<text name="AC_COMBINE_TEXTHELPPANELON"                     text="show AutoCombine info"/>
+		
+		<!--AutoCombine inputbinding text-->
+		<text name="AC_COMBINE_HELPPANEL"                           text="AutoCombine info ON/OFF"/>
+		<!--<text name="AC_COMBINE_STARTSTOP"                       text="AutoCombine ON/OFF"/>-->
+		<text name="AC_COMBINE_COLLISION_OTHER"                     text="front collision"/>
+		<text name="AC_COMBINE_COLLISION_BACK"                      text="back collision"/>
+		<text name="AC_COMBINE_WAITING_WEATHER"                     text="waiting for better weahter"/>
+		<text name="AC_COMBINE_WAITING_TRAILER"                     text="waiting for trailer"/>
+		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="unloading"/>
+		<text name="AC_COMBINE_UTURN_ON"                            text="AutoCombine mode [up/down]"/>
+		<text name="AC_COMBINE_UTURN_OFF"                           text="AutoCombine mode [circle]"/>
+		<text name="AC_COMBINE_REVERSE_ON"                          text="turn mode [reverse]"/>
+		<text name="AC_COMBINE_REVERSE_OFF"                         text="turn mode [driving]"/>
+		<text name="AC_COMBINE_WIDTH_OFFSET"                        text="width offset"/>
+		<text name="AC_COMBINE_TURN_OFFSET"                         text="turn offset"/>
+		<text name="AC_COMBINE_ERROR"                               text="error"/>
+		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE"                   text="go to next turn stage"/>
+		<text name="AC_COMBINE_TXT_CP_ON"                           text="courseplay mode [on]"/>
+		<text name="AC_COMBINE_TXT_CP_OFF"                          text="courseplay mode [off]"/>
+		<text name="AC_AUTO_STEER"                                  text="auto steer"/>
+		<text name="AC_AUTO_STEER_ON"                               text="auto steer [on]"/>
+		<text name="AC_AUTO_STEER_OFF"                              text="auto steer [off]"/>
+	</texts>
+</l10n>

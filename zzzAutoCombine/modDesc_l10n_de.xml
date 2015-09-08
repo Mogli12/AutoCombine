@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<!-- Note that 'description' is only here for easier translations. It needs to be manually copied to ModDesc.XML later. -->
+	<description><![CDATA[Automatisch Mähdreschen]]></description>
+
+	<texts>
+		<!--AutoCombine helpPanel text-->
+		<text name="AC_COMBINE_TXT_START"                           text="Alternativer Helfer"/>
+		<text name="AC_COMBINE_TXT_STOP"                            text="Normaler Helfer"/>
+		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="Arbeitsbreite:"/>
+		<text name="AC_COMBINE_SWAP_SIDE"                           text="Tausche aktive Seite"/>
+		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine AN/AUS"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="Aktive Seite: LINKS"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="Aktive Seite: RECHTS"/>
+		
+		<text name="AC_COMBINE_WAITMODE_ON"                         text="Abtankmodus [stehend]"/>
+		<text name="AC_COMBINE_WAITMODE_OFF"                        text="Abtankmodus [fahrend]"/>
+		<!--<text name="AC_COMBINE_WAITMODE_ON_EXPLANATION"         text="Mähdrescher tankt im Stehen ab"/>			
+		<text name="AC_COMBINE_WAITMODE_OFF_EXPLANATION"            text="Mähdrescher tankt während der Fahrt ab"/>-->			
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_ON"             text="Abstandshalter ist AN "/>
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_OFF"            text="Abstandshalter ist AUS"/>
+		<!--<text name="AC_COMBINE_COLLISIONTRIGGER_ON_EXPLANATION" text="(Mähdrescher hält Abstand zu anderen Fahrzeugen)"/>			
+		<text name="AC_COMBINE_COLLISIONTRIGGER_OFF_EXPLANATION"    text="(Mähdrescher hält keinen Abstand zu anderen Fahrzeugen)"/>-->			
+		
+		<!--AutoCombine help text-->                                
+		<text name="AC_COMBINE_TEXTHELPPANELOFF"                    text="AutoCombine-Info ausschalten"/>
+		<text name="AC_COMBINE_TEXTHELPPANELON"                     text="AutoCombine-Info einschalten"/>
+		
+		<!--AutoCombine inputbinding text-->                        
+		<text name="AC_COMBINE_HELPPANEL"                           text="AutoCombine-Info AN/AUS"/>
+		<!--text name="AC_COMBINE_STARTSTOP"                        text="AutoCombine AN/AUS"/-->			
+		<text name="AC_COMBINE_COLLISION_OTHER"                     text="Kollision vorne"/>
+		<text name="AC_COMBINE_COLLISION_BACK"                      text="Kollision hinten"/>
+		<text name="AC_COMBINE_WAITING_WEATHER"                     text="Warten auf besseres Wetter"/>
+		<text name="AC_COMBINE_WAITING_TRAILER"                     text="Warten auf Anhänger"/>
+		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="Abtanken"/>
+		<text name="AC_COMBINE_UTURN_ON"                            text="AutoCombine-Modus [auf/ab]"/>
+		<text name="AC_COMBINE_UTURN_OFF"                           text="AutoCombine-Modus [Kreisfahrt]"/>	
+		<text name="AC_COMBINE_REVERSE_ON"                          text="Wendemodus [rückwärts]"/>
+		<text name="AC_COMBINE_REVERSE_OFF"                         text="Wendemodus [vorwärts]"/>
+		<text name="AC_COMBINE_WIDTH_OFFSET"                        text="Offset (Breite)"/>
+		<text name="AC_COMBINE_TURN_OFFSET"                         text="Offset (Wendemanöver)"/>
+		<text name="AC_COMBINE_ERROR"                               text="Error"/>
+		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE"                   text="Springe zum nächsten Schritt"/>
+		<text name="AC_COMBINE_TXT_CP_ON"                           text="Courseplay-Modus [an]"/>
+		<text name="AC_COMBINE_TXT_CP_OFF"                          text="Courseplay-Modus [aus]"/>	
+		<text name="AC_AUTO_STEER"                                  text="Automatische Lenkung"/>
+		<text name="AC_AUTO_STEER_ON"                               text="Autom. Lenkung [an]"/>
+		<text name="AC_AUTO_STEER_OFF"                              text="Autom. Lenkung [aus]"/>
+	</texts>
+</l10n>
