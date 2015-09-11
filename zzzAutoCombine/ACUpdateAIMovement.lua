@@ -198,6 +198,10 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		end
 	end
 
+	if self.acTurnStage <= 0 then
+		AutoCombine.setAiThreshingTarget( self )				
+	end
+	
   local hasFruitPreparer = false
   local fruitType = self.lastValidInputFruitType
 	
@@ -371,17 +375,21 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				end
 			end
 	
-			local turnAngleRad = 0 
-			local limitAngle   = false
+			local turnAngleRad   = 0 
+			local limitAngle     = false
+			local maxUpDownAngle = 1.3089969389957471826927680763665 -- 75°
+			
 			if self.acTurnStage == 0 and AutoCombine.getTraceLength(self) > 1 then
-			  limitAngle   = ( self.acParameters.upNDown and -3.14 <= turnAngleRad and turnAngleRad <= 3.14 )
+			  limitAngle   = -3.14 <= turnAngleRad and turnAngleRad <= 3.14
 				turnAngleRad = AutoCombine.getTurnAngle(self)
 				if self.acParameters.leftAreaActive then
 					turnAngleRad = -turnAngleRad
 				end
+				if self.acParameters.upNDown then
+					maxUpDownAngle = 0.52359877559829887307710723054658 -- 30°
+				end
 			end
 			
-			local maxUpDownAngle = 0.52359877559829887307710723054658
 
 			if lookAhead < 0.5 then
 				self.acFruitsDetected = false		
@@ -1214,6 +1222,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					self.waitForTurnTime = g_currentMission.time + self.turnTimer
 					self:acSetState( "leftAreaActive", not self.acParameters.leftAreaActive )
 				end
+				AutoCombine.saveDirection( self, false )
 			end
 			
 --==============================================================				
@@ -1400,8 +1409,6 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 	--end	
 		
 	self.aiSteeringSpeed = self.acSteeringSpeed	
-
-	AutoCombine.setAiThreshingTarget( self )				
 end 
 
 ------------------------------------------------------------------------

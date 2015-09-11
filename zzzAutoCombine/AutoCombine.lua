@@ -234,6 +234,20 @@ function AutoCombine:draw()
 			end
 		end
 	end
+	
+	--if self.aiThreshingTargetX ~= nil then
+	--	local x, y, z
+	--	x = self.aiThreshingTargetX
+	--	z = self.aiThreshingTargetZ
+	--	y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
+	--	drawDebugLine(  x, y, z, 0,1,0,x, y+2, z, 0,1,0);
+	--	drawDebugPoint( x, y+2, z	, 1, 1, 1, 1 )
+  --
+	--	x,_,z = getWorldTranslation( self.aiTreshingDirectionNode )
+	--	y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z)
+	--	drawDebugLine(  x, y, z, 0,0,1,x, y+2, z, 0,0,1);
+	--	drawDebugPoint( x, y+2, z	, 1, 1, 1, 1 )
+	--end
 end
 
 ------------------------------------------------------------------------
@@ -1468,17 +1482,18 @@ function AutoCombine:saveDirection( cumulate )
 			self.acDirectionBeforeTurn.traceIndex = 0
 			self.acDirectionBeforeTurn.sx = vector.px
 			self.acDirectionBeforeTurn.sz = vector.pz
-		end
-		
-		local count = table.getn(self.acDirectionBeforeTurn.trace)
-		if count > 500 and self.acDirectionBeforeTurn.traceIndex == count then
-			local x = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[1].px
-			local z = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[1].pz		
-		
-			if x*x + z*z > 64 then 
-				self.acDirectionBeforeTurn.traceIndex = 0
+		else		
+			local count = table.getn(self.acDirectionBeforeTurn.trace)
+			if count > 500 and self.acDirectionBeforeTurn.traceIndex == count then
+				local x = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[1].px
+				local z = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[1].pz		
+			
+				if Utils.vector2LengthSq( x, z ) > 64 then 
+					self.acDirectionBeforeTurn.traceIndex = 0
+				end
 			end
 		end
+		
 		self.acDirectionBeforeTurn.traceIndex = self.acDirectionBeforeTurn.traceIndex + 1
 		
 		self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex] = vector
@@ -1669,24 +1684,48 @@ end
 ------------------------------------------------------------------------
 function AutoCombine.setAiThreshingTarget( self )			
 	local i = AutoCombine.getFirstTraceIndex( self )
-	local current = false
+	local current = true
+	local dx, dz
+	
 	if     i == nil
-			or i == self.acDirectionBeforeTurn.traceIndex then
+			or 0 == self.acDirectionBeforeTurn.traceIndex 
+			or i == self.acDirectionBeforeTurn.traceIndex 
+			or table.getn(self.acDirectionBeforeTurn.trace) < 2 then
 		current = true
 	else
-	  local l = AutoCombine.getTraceLength( self )
-	  if l < 1E-3 then
-			current = true
-  	end
+		i = self.acDirectionBeforeTurn.traceIndex
+		while true do
+			i = i - 1
+			if i < 1 then
+				i = table.getn(self.acDirectionBeforeTurn.trace)
+			end
+			if i == self.acDirectionBeforeTurn.traceIndex then
+				current = true
+				break
+			end
+			
+			if self.acDirectionBeforeTurn.trace[i] == nil or self.acDirectionBeforeTurn.trace[i].px == nil then
+				print( "Error in AutoCombine: unexpected trace index @1694 "..tostring(i).." / "..tostring(self.acDirectionBeforeTurn.traceIndex).." / "..tostring(table.getn(self.acDirectionBeforeTurn.trace)))
+				current = true
+				break
+			end
+			
+			dx = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[i].px
+			dz = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[i].pz		
+			
+			if Utils.vector2LengthSq( dx, dz ) > 4 then
+				current = false
+				break
+			end
+		end
 	end
+	
 	if current then
-		local x,_,z = getWorldTranslation(self.aiTreshingDirectionNode)
-		self.aiThreshingTargetX = x
-		self.aiThreshingTargetZ = z
+		self.aiThreshingTargetX,_,self.aiThreshingTargetZ = localToWorld( self.acRefNodeCorr, 0, 0, 10 )
 	else
-		self.aiThreshingTargetX = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[i].px
-		self.aiThreshingTargetZ = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[i].pz		
-	end
+		self.aiThreshingTargetX = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px + 5 * dx
+		self.aiThreshingTargetZ = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz + 5 * dz
+	end	
 end	
 
 ------------------------------------------------------------------------
