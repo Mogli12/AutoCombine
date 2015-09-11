@@ -7,7 +7,7 @@
 --
 --***************************************************************
 
-local AutoCombineVersion=4.000
+local AutoCombineVersion=4.091
 
 -- allow modders to include this source file together with mogliBase.lua in their mods
 if AutoCombine == nil or AutoCombine.version == nil or AutoCombine.version < AutoCombineVersion then

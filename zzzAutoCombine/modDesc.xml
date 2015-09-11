@@ -7,6 +7,8 @@
         <de>Automatisch Mähdreschen</de>
 		<fr>Auto Combine - French traduction by Waylan</fr>
 		<it>Auto Combine - Traduzione italiana by Cristiano Magro</it>
+		<it>Auto Combine - Traduzione italiana by Cristiano Magro</it>
+		<pl>Auto Combine - Polskie tłumaczenie Dzi4d3k</pl>
     </title>
     <description>
         <en>
@@ -17,7 +19,8 @@
 <![CDATA[Auto Combine - French traduction by Waylan]]></fr>
 <it>
 <![CDATA[Auto Combine - Traduzione italiana by Cristiano Magro]]></it>
-
+<pl>
+<![CDATA[Auto Combine - Polskie tłumaczenie Dzi4d3k]]></pl>
     </description>
     <iconFilename>store.dds</iconFilename>
     <multiplayer supported="true"/>
@@ -39,6 +42,7 @@
 			<de>AutoCombine v4.1 b1</de>
 			<fr>AutoCombine v4.1 b1</fr>
 			<it>AutoCombine v4.1 b1</it>
+			<pl>AutoCombine v4.1 b1</pl>
 		</text>
 	</l10n>
 </modDesc>
