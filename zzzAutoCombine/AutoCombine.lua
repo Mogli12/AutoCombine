@@ -1523,13 +1523,13 @@ function AutoCombine:saveDirection( cumulate )
 				self.acDirectionBeforeTurn.tz = z
 			end
 		end
+		self.acDirectionBeforeTurn.trx, self.acDirectionBeforeTurn.try, self.acDirectionBeforeTurn.trz = getWorldTranslation( self.acRotNode )
 	else
 		self.acDirectionBeforeTurn.trace = {}
 		self.acDirectionBeforeTurn.traceIndex = 0
 		self.acDirectionBeforeTurn.sx, _, self.acDirectionBeforeTurn.sz = getWorldTranslation( self.acRefNodeCorr )
 	end
 	
-	self.acDirectionBeforeTurn.trx, self.acDirectionBeforeTurn.try, self.acDirectionBeforeTurn.trz = getWorldTranslation( self.acRotNode )
 end
 
 ------------------------------------------------------------------------

@@ -967,16 +967,23 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			self.acTurnStage = self.acTurnStage + 1
 			self.turnTimer   = self.acDeltaTimeoutRun
 			
+		--print(string.format("acTurnStage 21: %2.2fm",AutoCombine.getTurnDistanceZ(self)))
+			
 --==============================================================				
 -- go to the right distance before the U-turn
 		elseif self.acTurnStage == 22 then
 
 			angle = math.rad( turnAngle )
+			
+			local z = AutoCombine.getTurnDistanceZ(self)
+		--print(string.format("acTurnStage 22: %2.2fm",z))
 
-			if     AutoCombine.getTurnDistanceZ(self) > self.acDimensions.uTurnDistance2 + 0.25 then
+			if     z > self.acDimensions.uTurnDistance2 + 1 then
 				moveForwards = false
 			--angle = -angle
-			elseif AutoCombine.getTurnDistanceZ(self) >= self.acDimensions.uTurnDistance2 - 0.25 then
+			elseif z < self.acDimensions.uTurnDistance2 - 1 then
+				moveForwards = true
+			else
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
@@ -985,16 +992,20 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 -- wait before U-turn					
 		elseif self.acTurnStage == 23 then
 			allowedToDrive = false		
-			noBreaking     = true
 			angle          = self.acDimensions.maxSteeringAngle
+
+			local z = AutoCombine.getTurnDistanceZ(self)
 
 			if self.strawPSenabled then
 			-- wait
 				angle            = math.rad( turnAngle )
 				self.turnTimer   = self.acDeltaTimeoutRun
+			--noBreaking       = true
 			elseif self.turnTimer < 0 then
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
+				angle = self.acDimensions.maxSteeringAngle
+			--print(string.format("acTurnStage 23: %2.2fm",AutoCombine.getTurnDistanceZ(self)))
 			end
 
 --==============================================================				
@@ -1279,10 +1290,13 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		acceleration = 1.0
 	end
 	
-	if not allowedToDrive and moveForwards and noBreaking and self.lastSpeedLevel > 0 then
-		allowedToDrive = true
-		speedLevel     = math.max( 0, self.lastSpeedLevel - 0.002 * dt )
-	elseif not allowedToDrive then
+	--if not allowedToDrive and moveForwards and noBreaking and self.lastSpeedLevel > 0 then
+	--	allowedToDrive = true
+	--	speedLevel     = math.max( 0, self.lastSpeedLevel - 0.002 * dt )
+	--elseif not allowedToDrive then
+	--	speedLevel     = 0
+	--end		
+	if not allowedToDrive then
 		speedLevel     = 0
 	end		
 
