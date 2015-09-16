@@ -1472,10 +1472,11 @@ end
 ------------------------------------------------------------------------
 function AutoCombine:saveDirection( cumulate )
 
+	local vector = {}	
+	vector.dx,_,vector.dz = localDirectionToWorld( self.acRefNodeCorr, 0,0,1 )
+	vector.px,_,vector.pz = getWorldTranslation( self.acRefNodeCorr )
+	
 	if cumulate then
-		local vector = {}	
-		vector.dx,_,vector.dz = localDirectionToWorld( self.acRefNodeCorr, 0,0,1 )
-		vector.px,_,vector.pz = getWorldTranslation( self.acRefNodeCorr )
 		
 		if self.acDirectionBeforeTurn.traceIndex == nil then
 			self.acDirectionBeforeTurn.trace = {}
@@ -1525,10 +1526,63 @@ function AutoCombine:saveDirection( cumulate )
 		end
 		self.acDirectionBeforeTurn.trx, self.acDirectionBeforeTurn.try, self.acDirectionBeforeTurn.trz = getWorldTranslation( self.acRotNode )
 	else
-		self.acDirectionBeforeTurn.trace = {}
+		self.acDirectionBeforeTurn.trace      = {}
+		self.acDirectionBeforeTurn.trace[1]   = vector
 		self.acDirectionBeforeTurn.traceIndex = 0
 		self.acDirectionBeforeTurn.sx, _, self.acDirectionBeforeTurn.sz = getWorldTranslation( self.acRefNodeCorr )
 	end
+
+	local i = AutoCombine.getFirstTraceIndex( self )
+	local current 
+	
+	if     i == nil
+			or 0 == self.acDirectionBeforeTurn.traceIndex 
+			or i == self.acDirectionBeforeTurn.traceIndex 
+			or table.getn(self.acDirectionBeforeTurn.trace) < 2 then
+		current = true
+	else
+		i = self.acDirectionBeforeTurn.traceIndex
+		while true do
+			i = i - 1
+			if i < 1 then
+				i = table.getn(self.acDirectionBeforeTurn.trace)
+			end
+			if i == self.acDirectionBeforeTurn.traceIndex then
+				current = true
+				break
+			end
+			
+			if self.acDirectionBeforeTurn.trace[i] == nil or self.acDirectionBeforeTurn.trace[i].px == nil then
+				print( "Error in AutoCombine: unexpected trace index @1694 "..tostring(i).." / "..tostring(self.acDirectionBeforeTurn.traceIndex).." / "..tostring(table.getn(self.acDirectionBeforeTurn.trace)))
+				current = true
+				break
+			end
+			
+			dx = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[i].px
+			dz = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[i].pz		
+			
+			if Utils.vector2LengthSq( dx, dz ) > 4 then
+				current = false
+				break
+			end
+		end
+	end
+	
+	if current then
+		self.acDirectionBeforeTurn.dx,_,self.acDirectionBeforeTurn.dz = localDirectionToWorld( self.acRefNodeCorr, 0, 0, 1 )
+	else
+		local l = Utils.vector2Length( dx, dz )
+		self.acDirectionBeforeTurn.dx = dx / l
+		self.acDirectionBeforeTurn.dz = dz / l
+	end	
+	
+	local cpIndex = self.acDirectionBeforeTurn.traceIndex + 1
+	if cpIndex > table.getn(self.acDirectionBeforeTurn.trace) then
+		cpIndex = 1
+	end
+	
+	self.acDirectionBeforeTurn.trace[cpIndex].dx = self.acDirectionBeforeTurn.dx
+	self.acDirectionBeforeTurn.trace[cpIndex].dz = self.acDirectionBeforeTurn.dz
 	
 end
 
@@ -1594,18 +1648,6 @@ function AutoCombine:getTurnDistanceX()
 		x = -x
 	end
 	return x
-	--if     self.acRefNode               == nil
-	--		or self.acDirectionBeforeTurn   == nil
-	--		or self.acDirectionBeforeTurn.x == nil
-	--		or self.acDirectionBeforeTurn.z == nil then	
-	--	return 0
-	--end
-	--
-	--local _,_,z = worldToLocal( self.acRefNode, self.acDirectionBeforeTurn.x, 0, self.acDirectionBeforeTurn.z )
-	--if not self.acParameters.leftAreaActive then
-	--	z = -z
-	--end
-	--return z
 end
 
 ------------------------------------------------------------------------
@@ -1683,48 +1725,17 @@ end
 -- setAiThreshingTarget
 ------------------------------------------------------------------------
 function AutoCombine.setAiThreshingTarget( self )			
-	local i = AutoCombine.getFirstTraceIndex( self )
-	local current = true
-	local dx, dz
 	
-	if     i == nil
-			or 0 == self.acDirectionBeforeTurn.traceIndex 
-			or i == self.acDirectionBeforeTurn.traceIndex 
-			or table.getn(self.acDirectionBeforeTurn.trace) < 2 then
-		current = true
-	else
-		i = self.acDirectionBeforeTurn.traceIndex
-		while true do
-			i = i - 1
-			if i < 1 then
-				i = table.getn(self.acDirectionBeforeTurn.trace)
-			end
-			if i == self.acDirectionBeforeTurn.traceIndex then
-				current = true
-				break
-			end
-			
-			if self.acDirectionBeforeTurn.trace[i] == nil or self.acDirectionBeforeTurn.trace[i].px == nil then
-				print( "Error in AutoCombine: unexpected trace index @1694 "..tostring(i).." / "..tostring(self.acDirectionBeforeTurn.traceIndex).." / "..tostring(table.getn(self.acDirectionBeforeTurn.trace)))
-				current = true
-				break
-			end
-			
-			dx = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px - self.acDirectionBeforeTurn.trace[i].px
-			dz = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz - self.acDirectionBeforeTurn.trace[i].pz		
-			
-			if Utils.vector2LengthSq( dx, dz ) > 4 then
-				current = false
-				break
-			end
-		end
-	end
-	
-	if current then
+	if     self.acDirectionBeforeTurn            == nil
+			or self.acDirectionBeforeTurn.traceIndex == nil
+			or self.acDirectionBeforeTurn.traceIndex  < 1
+			or self.acDirectionBeforeTurn.trace      == nil
+			or self.acDirectionBeforeTurn.dx         == nil
+			or self.acDirectionBeforeTurn.dz         == nil then
 		self.aiThreshingTargetX,_,self.aiThreshingTargetZ = localToWorld( self.acRefNodeCorr, 0, 0, 10 )
 	else
-		self.aiThreshingTargetX = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px + 5 * dx
-		self.aiThreshingTargetZ = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz + 5 * dz
+		self.aiThreshingTargetX = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].px + 10 * self.acDirectionBeforeTurn.dx
+		self.aiThreshingTargetZ = self.acDirectionBeforeTurn.trace[self.acDirectionBeforeTurn.traceIndex].pz + 10 * self.acDirectionBeforeTurn.dz
 	end	
 end	
 
