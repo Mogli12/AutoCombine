@@ -716,9 +716,10 @@ function AutoCombine:acUpdateTick(superFunc, dt)
 		self.acAxisSide = InputBinding.getDigitalInputAxis(InputBinding.AXIS_MOVE_SIDE_VEHICLE)
 		if InputBinding.isAxisZero(self.acAxisSide) then
 			self.acAxisSide = InputBinding.getAnalogInputAxis(InputBinding.AXIS_MOVE_SIDE_VEHICLE)
-     end
+    end
+	else
+		self.acAxisSide = 0
   end
-	
 	
 	superFunc(self,dt)
 	

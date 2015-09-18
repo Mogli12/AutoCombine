@@ -609,7 +609,8 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					x,_,z = localToWorld(self.acRefNode, self.acDimensions.xLeft, 0, self.acDimensions.zLeft )
 				else
 					x,_,z = localToWorld(self.acRefNode, self.acDimensions.xRight, 0, self.acDimensions.zRight)
-				end			dx = self.acDirectionBeforeTurn.tx - x
+				end			
+				dx = self.acDirectionBeforeTurn.tx - x
 				dz = self.acDirectionBeforeTurn.tz - z		
 				wx,_,wz = worldDirectionToLocal(self.acRefNode,dx,0,dz)
 				
