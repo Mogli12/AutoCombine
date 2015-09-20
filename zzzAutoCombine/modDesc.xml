@@ -9,6 +9,7 @@
 		<it>Auto Combine - Traduzione italiana by Cristiano Magro</it>
 		<it>Auto Combine - Traduzione italiana by Cristiano Magro</it>
 		<pl>Auto Combine - Polskie tłumaczenie Dzi4d3k</pl>
+		<ru>Auto Combine - перевод Gonimy Vetrom</ru>
     </title>
     <description>
         <en>
@@ -21,6 +22,8 @@
 <![CDATA[Auto Combine - Traduzione italiana by Cristiano Magro]]></it>
 <pl>
 <![CDATA[Auto Combine - Polskie tłumaczenie Dzi4d3k]]></pl>
+<ru>
+<![CDATA[Auto Combine - умный комбайнёр]]></ru>
     </description>
     <iconFilename>store.dds</iconFilename>
     <multiplayer supported="true"/>
@@ -43,6 +46,7 @@
 			<fr>AutoCombine v4.1 b1</fr>
 			<it>AutoCombine v4.1 b1</it>
 			<pl>AutoCombine v4.1 b1</pl>
+			<ru>AutoCombine v4.1 b1</ru>
 		</text>
 	</l10n>
 </modDesc>
