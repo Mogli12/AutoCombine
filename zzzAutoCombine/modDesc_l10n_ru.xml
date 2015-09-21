@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<!-- Note that 'description' is only here for easier translations. It needs to be manually copied to ModDesc.XML later. -->
+	<description><![CDATA[Auto Combine]]></description>
+
+	<texts>
+		<!--AutoCombine helpPanel text-->
+		<text name="AC_COMBINE_TXT_START"                           text="AutoCombine включён"/>
+		<text name="AC_COMBINE_TXT_STOP"                            text="AutoCombine выключен"/>
+		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="Рабочая ширина:"/>
+		<text name="AC_COMBINE_SWAP_SIDE"                           text="Сместится влево/вправо"/>
+		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine ВКЛ/ВЫКЛ"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="Активная сторона: ЛЕВАЯ"/>
+		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="Активная сторона: ПРАВАЯ"/>
+
+		<text name="AC_COMBINE_WAITMODE_ON"                         text="Режим разгрузки [останавливаясь]"/>
+		<text name="AC_COMBINE_WAITMODE_OFF"                        text="Режим разгрузки [в движении]"/>
+		<!--<text name="AC_COMBINE_WAITMODE_ON_EXPLANATION"         text="останавливаться для разгрузки"/>
+		<text name="AC_COMBINE_WAITMODE_OFF_EXPLANATION"            text="разгружаться в движении"/>-->		
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_ON"             text="удерживать дистанцию"/>
+		<text name="AC_COMBINE_COLLISIONTRIGGERMODE_OFF"            text="не удерживать дистанцию"/>
+		<!--<text name="AC_COMBINE_COLLISIONTRIGGER_ON_EXPLANATION" text="(Комбайн удерживает дистанцию от других ТС)"/>
+		<text name="AC_COMBINE_COLLISIONTRIGGER_OFF_EXPLANATION"    text="(Комбайн НЕ удерживает дистанцию от других ТС)"/>-->			
+			
+		<!--AutoCombine help text-->
+		<text name="AC_COMBINE_TEXTHELPPANELOFF"                    text="Скрыть AutoCombine info"/>
+		<text name="AC_COMBINE_TEXTHELPPANELON"                     text="Показать AutoCombine info"/>
+		
+		<!--AutoCombine inputbinding text-->
+		<text name="AC_COMBINE_HELPPANEL"                           text="AutoCombine info ВКЛ/ВЫКЛ"/>
+		<!--<text name="AC_COMBINE_STARTSTOP"                       text="AutoCombine ВКЛ/ВЫКЛ"/>-->
+		<text name="AC_COMBINE_COLLISION_OTHER"                     text="Коллизия спереди"/>
+		<text name="AC_COMBINE_COLLISION_BACK"                      text="Коллизия сзади"/>
+		<text name="AC_COMBINE_WAITING_WEATHER"                     text="Ожидаю лучшей погоды"/>
+		<text name="AC_COMBINE_WAITING_TRAILER"                     text="Ожидаю прицеп"/>
+		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="Разгружаюсь"/>
+		<text name="AC_COMBINE_UTURN_ON"                            text="Режим AutoCombine [челночный]"/>
+		<text name="AC_COMBINE_UTURN_OFF"                           text="Режим AutoCombine [по периметру]"/>
+		<text name="AC_COMBINE_REVERSE_ON"                          text="Режим разворота [реверс]"/>
+		<text name="AC_COMBINE_REVERSE_OFF"                         text="Режим разворота [прямо]"/>
+		<text name="AC_COMBINE_WIDTH_OFFSET"                        text="Ширина смещения"/>
+		<text name="AC_COMBINE_TURN_OFFSET"                         text="Развернуть смещение"/>
+		<text name="AC_COMBINE_ERROR"                               text="ошибка"/>
+		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE"                   text="К следующему этапу"/>
+		<text name="AC_COMBINE_TXT_CP_ON"                           text="Режим courseplay [ВКЛ]"/>
+		<text name="AC_COMBINE_TXT_CP_OFF"                          text="Режим courseplay [ВЫКЛ]"/>
+		<text name="AC_AUTO_STEER"                                  text="Авторуление"/>
+		<text name="AC_AUTO_STEER_ON"                               text="Авторуление [ВКЛ]"/>
+		<text name="AC_AUTO_STEER_OFF"                              text="Авторуление [ВЫКЛ]"/>
+	</texts>
+</l10n>
