@@ -25,7 +25,7 @@
 <ru>
 <![CDATA[Auto Combine - умный комбайнёр]]></ru>
     </description>
-    <iconFilename>store.dds</iconFilename>
+    <iconFilename>dds/store.dds</iconFilename>
     <multiplayer supported="true"/>
 	
     <extraSourceFiles>
