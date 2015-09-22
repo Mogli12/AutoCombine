@@ -39,7 +39,7 @@
 		<input name="AC_AUTO_STEER"           category="VEHICLE" key1="KEY_lctrl KEY_6" key2="" button="" device="0" mouse="" />
 	</inputBindings>
 	
-	<l10n filenamePrefix="modDesc_l10n">
+	<l10n filenamePrefix="translations/translation" > <!-- load translations from "translations/translation_<language>.xml file -->
 		<text name="AC_COMBINE_VERSION">
 			<en>AutoCombine v4.1 b1</en>
 			<de>AutoCombine v4.1 b1</de>
