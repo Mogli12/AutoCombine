@@ -642,9 +642,13 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 --==============================================================		
 --==============================================================		
 -- turn 90° or turn outside
+		if     self.acTurnStage == 1 then
+			AICombine.setAIImplementsMoveDown(self,false)
+			self.acTurnStage   = 8
+			self.turnTimer     = self.acDeltaTimeoutWait
 --==============================================================		
 -- move far enough			
-		if     self.acTurnStage == 1 then
+		elseif self.acTurnStage == 8 then
 
 			if AutoCombine.getTurnDistance(self) > 5 then
 				angle = 0
@@ -658,74 +662,71 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				angle = 0
 			end
 
-			if self.acTurn2Outside then
-				AICombine.setAIImplementsMoveDown(self,false)
+			if      self.acTurn2Outside then
 				self.acTurnStage   = 4
 				self.turnTimer     = self.acDeltaTimeoutWait
 				allowedToDrive     = false				
 				self.waitForTurnTime = g_currentMission.time + self.turnTimer
-			elseif math.abs( angle ) < 0.02 then
-				local factor         = math.max( 0.7, math.cos( math.min( math.rad(turnAngle) + AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - math.rad(turnAngle) - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
-				local insideDistance = self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor ) + self.acParameters.turnOffset		
-			
-				if     AutoCombine.getTurnDistance(self) > insideDistance + 2 then
-					moveForwards = false
-				elseif AutoCombine.getTurnDistance(self) < insideDistance then
-					moveForwards = true
-				else
-					AICombine.setAIImplementsMoveDown(self,false)
-					self.acTurnStage   = 4
-					self.turnTimer     = self.acDeltaTimeoutWait
-					allowedToDrive     = false				
-					self.waitForTurnTime = g_currentMission.time + self.turnTimer
-				end
+			elseif  math.abs( angle ) < 0.02 
+					and AutoCombine.getTurnDistance(self) > self.acDimensions.insideDistance - 0.5 then
+				self.acTurnStage   = 4
+				self.turnTimer     = self.acDeltaTimeoutWait
+				allowedToDrive     = false				
+				self.waitForTurnTime = g_currentMission.time + self.turnTimer
 			end
 
 --==============================================================				
 -- wait before going back				
 		elseif self.acTurnStage == 4 then
 			allowedToDrive = false				
-			moveForwards   = false					
+			moveForwards   = false		
+			local targetTS = 2
 
 			if self.acParameters.noReverse then
-				angle = 0
+				angle    = 0
+				targetTS = 5
 			elseif self.acTurn2Outside then				
-				angle = self.acDimensions.maxSteeringAngle
+				angle    = self.acDimensions.maxSteeringAngle
+			elseif AutoCombine.getTurnDistance(self) > self.acDimensions.insideDistance + 0.5 then
+				angle    = math.rad( turnAngle )
+				targetTS = 9
 			else
-				angle = -self.acDimensions.maxSteeringAngle
+				angle    = -self.acDimensions.maxSteeringAngle
 			end
 			
 			--if self.turnTimer < 0 then
 			if self.strawPSenabled then
 			-- wait
 			elseif self.waitForTurnTime < g_currentMission.time then
-				if self.acParameters.noReverse then
-					self.acTurnStage = 5
-				else
-					self.acTurnStage = 2
-				end
-				self.turnTimer     = self.acDeltaTimeoutStart
+				self.acTurnStage = targetTS
+				self.turnTimer   = self.acDeltaTimeoutStart
 			end
 
 --==============================================================				
--- going back
+-- going back (straight)
+		elseif self.acTurnStage == 9 then
+			
+			moveForwards = false					
+			angle        = math.rad( turnAngle )
+			
+			if AutoCombine.getTurnDistance(self) < self.acDimensions.insideDistance then
+				self.acTurnStage = 2
+				self.turnTimer   = self.acDeltaTimeoutStart
+			end
+			
+--==============================================================				
+-- going back (turn 90°)
 		elseif self.acTurnStage == 2 then
 
 			moveForwards = false					
-		
-			--if     ( ( turnAngle > 30 or self.acTurn2Outside ) 
-			--		 and self.acBorderDetected 
-			--		 and not self.acFruitsDetected ) 
-			--		or ( self.turnTimer < 0 and math.abs( turnAngle ) > 90 ) 
-			--		or AutoCombine.getTurnDistance(self) > 20 then
+			
 			if     AutoCombine.getTurnDistance(self) > 18
 					or ( not self.acFruitsDetected
 					 and ( self.acBorderDetected or ( self.turnTimer < 0 and math.abs( turnAngle ) > 90 ) ) ) 
-					or ( self.acTurnStage == 2 and self.acTurn2Outside and self.acBorderDetected ) then
-			--print(tostring(wx)(turnAngle).." "..tostring(self.acBorderDetected).." "..tostring(self.acFruitsDetected).." "..tostring(self.turnTimer).." "..tostring(AutoCombine.getTurnDistance(self)))
+					or ( self.acTurn2Outside and self.acBorderDetected ) then
 				self.acTurnStage   = 3
 				self.turnTimer     = self.acDeltaTimeoutWait
-				self.lastTurnAngle = angle
+				self.lastTurnAngle = -angle
 				AICombine.setAIImplementsMoveDown(self,true)
 			end
 
