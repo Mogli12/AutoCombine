@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="23">
     <author>Mogli</author>
-    <version>4.0.9.1</version>
+    <version>4.0.9.2</version>
     <title>
         <en>Auto Combine</en>
         <de>Automatisch Mähdreschen</de>
@@ -41,12 +41,12 @@
 	
 	<l10n filenamePrefix="translations/translation" > <!-- load translations from "translations/translation_<language>.xml file -->
 		<text name="AC_COMBINE_VERSION">
-			<en>AutoCombine v4.1 b1</en>
-			<de>AutoCombine v4.1 b1</de>
-			<fr>AutoCombine v4.1 b1</fr>
-			<it>AutoCombine v4.1 b1</it>
-			<pl>AutoCombine v4.1 b1</pl>
-			<ru>AutoCombine v4.1 b1</ru>
+			<en>AutoCombine v4.1 b2</en>
+			<de>AutoCombine v4.1 b2</de>
+			<fr>AutoCombine v4.1 b2</fr>
+			<it>AutoCombine v4.1 b2</it>
+			<pl>AutoCombine v4.1 b2</pl>
+			<ru>AutoCombine v4.1 b2</ru>
 		</text>
 	</l10n>
 </modDesc>
