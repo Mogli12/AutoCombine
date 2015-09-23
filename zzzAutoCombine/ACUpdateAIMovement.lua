@@ -658,24 +658,21 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				angle = 0
 			end
 
-			--if self.acTurn2Outside or ( angle == 0 and AutoCombine.getTurnDistance(self) > self.acDimensions.insideDistance ) then
-
-			local insideDistance = 5
-			local factor         = 1
-			
 			if self.acTurn2Outside then
 				AICombine.setAIImplementsMoveDown(self,false)
 				self.acTurnStage   = 4
 				self.turnTimer     = self.acDeltaTimeoutWait
 				allowedToDrive     = false				
 				self.waitForTurnTime = g_currentMission.time + self.turnTimer
-			else
-				factor         = math.max( 0.7, math.cos( math.min( math.rad(turnAngle) + AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - math.rad(turnAngle) - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
-				insideDistance = math.max( 0, self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor ) )				
+			elseif math.abs( angle ) < 0.02 then
+				local factor         = math.max( 0.7, math.cos( math.min( math.rad(turnAngle) + AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - math.rad(turnAngle) - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
+				local insideDistance = self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor ) + self.acParameters.turnOffset		
 			
-				if angle == 0 and AutoCombine.getTurnDistance(self) > insideDistance then
-				--print(tostring(self.acDimensions.cutterDistance).." - 1 - "..tostring(self.acDimensions.distance).." + ( "..tostring(self.acDimensions.radius).." * "..tostring(factor)..")")
-				--print(tostring(turnAngle).." "..tostring(AutoCombine.getTurnDistance(self)).." > "..tostring(insideDistance))				
+				if     AutoCombine.getTurnDistance(self) > insideDistance + 2 then
+					moveForwards = false
+				elseif AutoCombine.getTurnDistance(self) < insideDistance then
+					moveForwards = true
+				else
 					AICombine.setAIImplementsMoveDown(self,false)
 					self.acTurnStage   = 4
 					self.turnTimer     = self.acDeltaTimeoutWait
@@ -979,10 +976,10 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			local z = AutoCombine.getTurnDistanceZ(self)
 		--print(string.format("acTurnStage 22: %2.2fm",z))
 
-			if     z > self.acDimensions.uTurnDistance2 + 1 then
+			if     z > self.acDimensions.uTurnDistance2 + 0.5 then
 				moveForwards = false
 			--angle = -angle
-			elseif z < self.acDimensions.uTurnDistance2 - 1 then
+			elseif z < self.acDimensions.uTurnDistance2 - 0.5 then
 				moveForwards = true
 			else
 				self.acTurnStage = self.acTurnStage + 1
@@ -1017,8 +1014,8 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			
 			if turnAngle < -87 then
 
-				if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.25
-				    or AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.25 then
+				if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.5
+				    or AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.5 then
 				-- move to right position II
 					self.acTurnStage = self.acTurnStage + 1
 					self.turnTimer   = self.acDeltaTimeoutRun
@@ -1048,10 +1045,10 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 
 			angle = math.rad( turnAngle + 90 )
 			
-			if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.25 then
+			if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.5 then
 				moveForwards = false
 			--angle = -angle
-			elseif AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.25 then
+			elseif AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.5 then
 				moveForwards = true					
 			else
 				self.acTurnStage = self.acTurnStage + 1

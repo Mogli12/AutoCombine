@@ -1374,7 +1374,7 @@ function AutoCombine:calculateDistances()
 --self.acDimensions.maxLookingAngle = math.min( AutoCombine.calculateSteeringAngle( self, 2, 1 ) ,self.acDimensions.maxSteeringAngle)
 	self.acDimensions.maxLookingAngle = math.min( AutoCombine.calculateSteeringAngle( self, 2, 2 ) ,self.acDimensions.maxSteeringAngle)
 	local factor = math.max( 0, math.cos( math.min( math.rad(15) + AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - math.rad(15) - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
-	self.acDimensions.insideDistance  = math.max(0, self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor ) )
+	self.acDimensions.insideDistance  = self.acDimensions.cutterDistance - 1 - self.acDimensions.distance + ( self.acDimensions.radius * factor )
 	
 	if self.acDimensions.aaAngle > 1E-6 then
 		self.acDimensions.uTurnRefAngle	  = -120
@@ -1422,7 +1422,7 @@ function AutoCombine:calculateDistances()
 	end
 	
 	
-	self.acDimensions.insideDistance  = math.max( 0, self.acDimensions.insideDistance + self.acParameters.turnOffset )
+	self.acDimensions.insideDistance  = self.acDimensions.insideDistance + self.acParameters.turnOffset
   self.acDimensions.uTurnDistance   = math.max( 1, self.acDimensions.uTurnDistance  + self.acParameters.turnOffset )	
   self.acDimensions.uTurnDistance2  = 1.0 + self.acDimensions.uTurnDistance2 + self.acParameters.turnOffset
 	
