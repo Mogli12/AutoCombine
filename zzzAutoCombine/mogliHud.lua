@@ -162,14 +162,14 @@ else
 		function _newClass_:addButton(imgEnabled, imgDisabled, cbOnClick, cbVisible, nx, ny, textEnabled, textDisabled, textCallback, imgCallback)
 			local x = self[_level0_].BtnPosX + (nx-1)*(self[_level0_].BtnWidth+self[_level0_].Border);
 			local y = self[_level0_].BtnPosY - (ny-1)*(self[_level0_].BtnHeight+self[_level0_].Border);
-			local img1 = Utils.getNoNil( imgEnabled, "empty.dds" )
+			local img1 = Utils.getNoNil( imgEnabled, "dds/empty.dds" )
 			local state, result = pcall( Utils.getFilename, img1, self[_level0_].Directory )
 			if not state then
 				print("ERROR: "..tostring(result).." (img1: "..tostring(img1)..")")
 				return
 			end
 			local overlay = Overlay:new(nil, result, x,y,self[_level0_].BtnWidth,self[_level0_].BtnHeight);
-			local img2 = "empty.dds"
+			local img2 = "dds/empty.dds"
 			if imgDisabled ~= nil then
 				img2 = imgDisabled
 			end;
@@ -206,10 +206,10 @@ else
 		function _newClass_:addCloseButton(nx, ny)
 			local x = self[_level0_].BtnPosX + (nx-1)*(self[_level0_].BtnWidth+self[_level0_].Border) + 0.5*self[_level0_].BtnWidth;
 			local y = self[_level0_].BtnPosY + self[_level0_].BtnHeight+self[_level0_].Border;
-			local overlay = Overlay:new(nil, Utils.getFilename("close.dds", self[_level0_].Directory), x,y,0.5*self[_level0_].BtnWidth,0.5*self[_level0_].BtnHeight);
+			local overlay = Overlay:new(nil, Utils.getFilename("dds/close.dds", self[_level0_].Directory), x,y,0.5*self[_level0_].BtnWidth,0.5*self[_level0_].BtnHeight);
 			local button = {enabled=true, ovEnabled=overlay, ovDisabled=nil, onClick=_newClass_.onClose, onVisible=nil, twoState=false, rect={x,y,x+0.5*self[_level0_].BtnWidth,y+0.5*self[_level0_].BtnHeight}, text1 = nil, text2 = nil, textcb = nil, onRender = nil };
 			button.overlays = {}
-			button.overlays["close.dds"] = overlay
+			button.overlays["dds/close.dds"] = overlay
 			if self[_level0_].Buttons == nil then self[_level0_].Buttons = {}; end
 			table.insert(self[_level0_].Buttons, button);
 			return button;

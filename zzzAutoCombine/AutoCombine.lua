@@ -156,24 +156,24 @@ function AutoCombine:initMogliHud()
 	AutoCombineHud.init( self, AutoCombine.baseDirectory, "AutoCombineHud", 0.4,  "AC_COMBINE_TEXTHELPPANELON", "AC_COMBINE_TEXTHELPPANELOFF", InputBinding.AC_COMBINE_HELPPANEL, 0.395, 0.0108, 5, 3 )
 	AutoCombineHud.setTitle( self, "AC_COMBINE_VERSION" )
 	
-	AutoCombineHud.addButton(self, "off.dds",            "on.dds",           AutoCombine.onStart,       AutoCombine.evalStart,     1,1, "HireEmployee", "DismissEmployee", nil, AutoCombine.getStartImage )
+	AutoCombineHud.addButton(self, "dds/off.dds",            "dds/on.dds",           AutoCombine.onStart,       AutoCombine.evalStart,     1,1, "HireEmployee", "DismissEmployee", nil, AutoCombine.getStartImage )
 	
-	AutoCombineHud.addButton(self, "no_wait.dds",        "wait.dds",         AutoCombine.setWait,       AutoCombine.evalWait,      2,1, "AC_COMBINE_WAITMODE_OFF", "AC_COMBINE_WAITMODE_ON" )	
-	AutoCombineHud.addButton(self, "inactive_left.dds",  "active_left.dds",  AutoCombine.setAreaLeft,   AutoCombine.evalAreaLeft,  3,1, "AC_COMBINE_TXT_ACTIVESIDERIGHT", "AC_COMBINE_TXT_ACTIVESIDELEFT" )
-	AutoCombineHud.addButton(self, "inactive_right.dds", "active_right.dds", AutoCombine.setAreaRight,  AutoCombine.evalAreaRight, 4,1, "AC_COMBINE_TXT_ACTIVESIDELEFT", "AC_COMBINE_TXT_ACTIVESIDERIGHT" )
-	AutoCombineHud.addButton(self, "next.dds",           "no_next.dds",      AutoCombine.nextTurnStage, AutoCombine.evalTurnStage, 5,1, "AC_COMBINE_TXT_NEXTTURNSTAGE", nil )
+	AutoCombineHud.addButton(self, "dds/no_wait.dds",        "dds/wait.dds",         AutoCombine.setWait,       AutoCombine.evalWait,      2,1, "AC_COMBINE_WAITMODE_OFF", "AC_COMBINE_WAITMODE_ON" )	
+	AutoCombineHud.addButton(self, "dds/inactive_left.dds",  "dds/active_left.dds",  AutoCombine.setAreaLeft,   AutoCombine.evalAreaLeft,  3,1, "AC_COMBINE_TXT_ACTIVESIDERIGHT", "AC_COMBINE_TXT_ACTIVESIDELEFT" )
+	AutoCombineHud.addButton(self, "dds/inactive_right.dds", "dds/active_right.dds", AutoCombine.setAreaRight,  AutoCombine.evalAreaRight, 4,1, "AC_COMBINE_TXT_ACTIVESIDELEFT", "AC_COMBINE_TXT_ACTIVESIDERIGHT" )
+	AutoCombineHud.addButton(self, "dds/next.dds",           "dds/no_next.dds",      AutoCombine.nextTurnStage, AutoCombine.evalTurnStage, 5,1, "AC_COMBINE_TXT_NEXTTURNSTAGE", nil )
 	                            
-	AutoCombineHud.addButton(self, "ai_combine.dds",     "auto_combine.dds", AutoCombine.onEnable,      AutoCombine.evalEnable,    1,2, "AC_COMBINE_TXT_STOP", "AC_COMBINE_TXT_START" )
-	AutoCombineHud.addButton(self, "no_distance.dds",    "distance.dds",     AutoCombine.setOtherCombine,AutoCombine.evalOtherCombine, 2,2, "AC_COMBINE_COLLISIONTRIGGERMODE_OFF", "AC_COMBINE_COLLISIONTRIGGERMODE_ON" )	
-	AutoCombineHud.addButton(self, "no_uturn2.dds",      "uturn.dds",        AutoCombine.setUTurn,     AutoCombine.evalUTurn,      3,2, "AC_COMBINE_UTURN_OFF", "AC_COMBINE_UTURN_ON") 
-	AutoCombineHud.addButton(self, "reverse.dds",        "no_reverse.dds",   AutoCombine.setNoReverse, AutoCombine.evalNoReverse,  4,2, "AC_COMBINE_REVERSE_ON", "AC_COMBINE_REVERSE_OFF")
---AutoCombineHud.addButton(self, "no_cp.dds",          "cp.dds",           AutoCombine.setCPSupport, AutoCombine.evalCPSupport,  5,2, "AC_COMBINE_TXT_CP_OFF", "AC_COMBINE_TXT_CP_ON" )
+	AutoCombineHud.addButton(self, "dds/ai_combine.dds",     "dds/auto_combine.dds", AutoCombine.onEnable,      AutoCombine.evalEnable,    1,2, "AC_COMBINE_TXT_STOP", "AC_COMBINE_TXT_START" )
+	AutoCombineHud.addButton(self, "dds/no_distance.dds",    "dds/distance.dds",     AutoCombine.setOtherCombine,AutoCombine.evalOtherCombine, 2,2, "AC_COMBINE_COLLISIONTRIGGERMODE_OFF", "AC_COMBINE_COLLISIONTRIGGERMODE_ON" )	
+	AutoCombineHud.addButton(self, "dds/no_uturn2.dds",      "dds/uturn.dds",        AutoCombine.setUTurn,     AutoCombine.evalUTurn,      3,2, "AC_COMBINE_UTURN_OFF", "AC_COMBINE_UTURN_ON") 
+	AutoCombineHud.addButton(self, "dds/reverse.dds",        "dds/no_reverse.dds",   AutoCombine.setNoReverse, AutoCombine.evalNoReverse,  4,2, "AC_COMBINE_REVERSE_ON", "AC_COMBINE_REVERSE_OFF")
+--AutoCombineHud.addButton(self, "dds/no_cp.dds",          "dds/cp.dds",           AutoCombine.setCPSupport, AutoCombine.evalCPSupport,  5,2, "AC_COMBINE_TXT_CP_OFF", "AC_COMBINE_TXT_CP_ON" )
 
-	AutoCombineHud.addButton(self, "bigger.dds",         nil,                AutoCombine.setWidthUp,   nil, 1,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
-	AutoCombineHud.addButton(self, "smaller.dds",        nil,                AutoCombine.setWidthDown, nil, 2,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
-	AutoCombineHud.addButton(self, "forward.dds",        nil,                AutoCombine.setForward,   nil, 3,3, "AC_COMBINE_TURN_OFFSET", nil, AutoCombine.getTurnOffset)
-	AutoCombineHud.addButton(self, "backward.dds",       nil,                AutoCombine.setBackward,  nil, 4,3, "AC_COMBINE_TURN_OFFSET", nil, AutoCombine.getTurnOffset)
-	AutoCombineHud.addButton(self, "auto_steer_off.dds", "auto_steer_on.dds",AutoCombine.onAutoSteer,  AutoCombine.evalAutoSteer, 5,3, "AC_AUTO_STEER_ON", "AC_AUTO_STEER_OFF", nil, AutoCombine.getAutoSteerImage )
+	AutoCombineHud.addButton(self, "dds/bigger.dds",         nil,                AutoCombine.setWidthUp,   nil, 1,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
+	AutoCombineHud.addButton(self, "dds/smaller.dds",        nil,                AutoCombine.setWidthDown, nil, 2,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
+	AutoCombineHud.addButton(self, "dds/forward.dds",        nil,                AutoCombine.setForward,   nil, 3,3, "AC_COMBINE_TURN_OFFSET", nil, AutoCombine.getTurnOffset)
+	AutoCombineHud.addButton(self, "dds/backward.dds",       nil,                AutoCombine.setBackward,  nil, 4,3, "AC_COMBINE_TURN_OFFSET", nil, AutoCombine.getTurnOffset)
+	AutoCombineHud.addButton(self, "dds/auto_steer_off.dds", "dds/auto_steer_on.dds",AutoCombine.onAutoSteer,  AutoCombine.evalAutoSteer, 5,3, "AC_AUTO_STEER_ON", "AC_AUTO_STEER_OFF", nil, AutoCombine.getAutoSteerImage )
 	
 end
 
@@ -381,11 +381,11 @@ end
 
 function AutoCombine:getStartImage()
 	if self.isAIThreshing then
-		return "on.dds"
+		return "dds/on.dds"
 	elseif self:canStartAIThreshing() then
-		return "off.dds"
+		return "dds/off.dds"
 	end
-	return "empty.dds"
+	return "dds/empty.dds"
 end
 
 function AutoCombine:evalEnable()
@@ -472,11 +472,11 @@ end
 
 function AutoCombine:getAutoSteerImage()
 	if self.acTurnStage >= 97 then
-		return "auto_steer_on.dds"
+		return "dds/auto_steer_on.dds"
 	elseif not self.isAIThreshing and self:canStartAIThreshing() then
-		return "auto_steer_off.dds"
+		return "dds/auto_steer_off.dds"
 	end
-	return "empty.dds"
+	return "dds/empty.dds"
 end
 
 function AutoCombine:evalAutoSteer()
