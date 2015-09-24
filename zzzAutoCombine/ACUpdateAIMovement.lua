@@ -668,7 +668,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				allowedToDrive     = false				
 				self.waitForTurnTime = g_currentMission.time + self.turnTimer
 			elseif  math.abs( angle ) < 0.02 
-					and AutoCombine.getTurnDistance(self) > self.acDimensions.insideDistance - 0.5 then
+					and AutoCombine.getTurnDistanceZ(self) > self.acDimensions.insideDistance - 0.5 then
 				self.acTurnStage   = 4
 				self.turnTimer     = self.acDeltaTimeoutWait
 				allowedToDrive     = false				
@@ -687,7 +687,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				targetTS = 5
 			elseif self.acTurn2Outside then				
 				angle    = self.acDimensions.maxSteeringAngle
-			elseif AutoCombine.getTurnDistance(self) > self.acDimensions.insideDistance + 0.5 then
+			elseif AutoCombine.getTurnDistanceZ(self) > self.acDimensions.insideDistance + 0.5 then
 				angle    = math.rad( turnAngle )
 				targetTS = 9
 			else
@@ -709,7 +709,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			moveForwards = false					
 			angle        = math.rad( turnAngle )
 			
-			if AutoCombine.getTurnDistance(self) < self.acDimensions.insideDistance then
+			if AutoCombine.getTurnDistanceZ(self) < self.acDimensions.insideDistance then
 				self.acTurnStage = 2
 				self.turnTimer   = self.acDeltaTimeoutStart
 			end
