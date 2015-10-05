@@ -10,6 +10,13 @@
 		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="Larg. lavoro:"/>
 		<text name="AC_COMBINE_SWAP_SIDE"                           text="Scambia sinistra/destra"/>		
 		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine On/Off"/>
+
+		<text name="AC_COMBINE_UTURN_ON_OFF"                        text="AutoCombine cambia modo"/>
+		<text name="AC_COMBINE_STEERING"                            text="sterzo manuale"/>
+		<text name="AC_COMBINE_STEERING_ON"                         text="sterzo manuale [on]"/>
+		<text name="AC_COMBINE_STEERING_OFF"                        text="sterzo manuale [off]"/>
+		<text name="AC_COMBINE_CONTINUE"                            text="continua"/>
+
 		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="attiva lato: sinistro"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="attiva lato: destro"/>		
 
