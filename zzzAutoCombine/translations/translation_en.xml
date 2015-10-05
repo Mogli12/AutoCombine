@@ -10,6 +10,11 @@
 		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="workwidth:"/>
 		<text name="AC_COMBINE_SWAP_SIDE"                           text="swap left/right"/>
 		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine ON/OFF"/>
+		<text name="AC_COMBINE_UTURN_ON_OFF"                        text="change AutoCombine mode"/>
+		<text name="AC_COMBINE_STEERING"                            text="manual steering"/>
+		<text name="AC_COMBINE_STEERING_ON"                         text="manual steering [on]"/>
+		<text name="AC_COMBINE_STEERING_OFF"                        text="manual steering [off]"/>
+		<text name="AC_COMBINE_CONTINUE"                            text="continue"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="active side: LEFT"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="active side: RIGHT"/>
 
@@ -34,6 +39,7 @@
 		<text name="AC_COMBINE_WAITING_WEATHER"                     text="waiting for better weahter"/>
 		<text name="AC_COMBINE_WAITING_TRAILER"                     text="waiting for trailer"/>
 		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="unloading"/>
+		<text name="AC_COMBINE_WAITING_PAUSE"                       text="pause"/>
 		<text name="AC_COMBINE_UTURN_ON"                            text="AutoCombine mode [up/down]"/>
 		<text name="AC_COMBINE_UTURN_OFF"                           text="AutoCombine mode [circle]"/>
 		<text name="AC_COMBINE_REVERSE_ON"                          text="turn mode [reverse]"/>

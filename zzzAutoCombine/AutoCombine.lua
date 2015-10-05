@@ -59,6 +59,7 @@ function AutoCombine:load(xmlFile)
 	AutoCombine.registerState( self, "turnOffset"     , 0    , AutoCombine.onChangeTurnOffset  , true )
 	AutoCombine.registerState( self, "widthOffset"    , 0    , AutoCombine.onChangeWidthOffset , true )
 	AutoCombine.registerState( self, "speed"          , 10   , nil                             , true )
+	AutoCombine.registerState( self, "noSteering"     , false, nil                             , true )
 	
 	AutoCombine.registerState( self, "CPSupport"      , false )
 	
@@ -183,8 +184,8 @@ end
 function AutoCombine:draw()
 
 	if self.acMogliInitDone then
-		AutoCombineHud.draw(self,self.acLCtrlPressed)
-	elseif self.acLCtrlPressed == nil or not self.acLCtrlPressed then
+		AutoCombineHud.draw(self,self.acLCtrlPressed or self.acLAltPressed)
+	elseif not ( self.acLCtrlPressed ) then
 		g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_TEXTHELPPANELON"), InputBinding.AC_COMBINE_HELPPANEL)
 	end
 	if      self.acParameters ~= nil
@@ -225,6 +226,17 @@ function AutoCombine:draw()
 		else
 			g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_TXT_STOP"), InputBinding.AC_COMBINE_ENABLE)
 		end
+	elseif self.acLAltPressed then
+		if self.acParameters.upNDown then
+			g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_UTURN_ON"), InputBinding.AC_COMBINE_UTURN_ON_OFF)
+		else
+			g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_UTURN_OFF"), InputBinding.AC_COMBINE_UTURN_ON_OFF)
+		end
+		if self.acParameters.noSteering then
+			g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_STEERING_OFF"), InputBinding.AC_COMBINE_STEERING)
+		else
+			g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_STEERING_ON"), InputBinding.AC_COMBINE_STEERING)
+		end
 	else
 		if self.acParameters.enabled or self.acTurnStage >= 97 then
 			if self.acParameters.rightAreaActive then
@@ -233,6 +245,10 @@ function AutoCombine:draw()
 				g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_TXT_ACTIVESIDELEFT"), InputBinding.AC_COMBINE_SWAP_SIDE)
 			end
 		end
+	end
+	
+	if self.acParameters.pause then
+		g_currentMission:addHelpButtonText(AutoCombineHud.getText("AC_COMBINE_CONTINUE"), InputBinding.TOGGLE_CRUISE_CONTROL)
 	end
 	
 	--if self.aiThreshingTargetX ~= nil then
@@ -533,11 +549,13 @@ end
 -- keyEvent
 ------------------------------------------------------------------------
 function AutoCombine:keyEvent(unicode, sym, modifier, isDown)
-	
-	if isDown and sym == Input.KEY_lctrl then
-		self.acLCtrlPressed = true
-	else
-		self.acLCtrlPressed = false
+	if self.isEntered and self.isClient then
+		if sym == Input.KEY_lctrl then
+			self.acLCtrlPressed = isDown
+		end
+		if sym == Input.KEY_lalt then
+			self.acLAltPressed = isDown
+		end
 	end
 end
 
@@ -556,6 +574,10 @@ function AutoCombine:update(dt)
 			else
 				AutoCombine.onAutoSteer(self, false)
 			end
+		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_UTURN_ON_OFF) then
+			self:acSetState( "upNDown", not self.acParameters.upNDown )
+		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_STEERING) then
+			self:acSetState( "noSteering", not self.acParameters.noSteering )
 		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_SWAP_SIDE) then
 			self:acSetState( "leftAreaActive", not self.acParameters.leftAreaActive )
 		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_HELPPANEL) then
@@ -694,8 +716,6 @@ end
 -- AICombine:updateTick
 ------------------------------------------------------------------------
 function AutoCombine:acUpdateTick(superFunc, dt)
-
-	AutoCombineHud.setInfoText( self )
 	
   if      self.isServer
 			and self.isAIThreshing 
@@ -712,7 +732,7 @@ function AutoCombine:acUpdateTick(superFunc, dt)
 		self.waitForDischargeTime    = g_currentMission.time + self.waitForDischargeTimeout
 	end
 
-	if self.isEntered and self.isClient and self:getIsActive() then
+	if self.isEntered and self.isClient and self:getIsActive() and not self.acParameters.noSteering then
 		self.acAxisSide = InputBinding.getDigitalInputAxis(InputBinding.AXIS_MOVE_SIDE_VEHICLE)
 		if InputBinding.isAxisZero(self.acAxisSide) then
 			self.acAxisSide = InputBinding.getAnalogInputAxis(InputBinding.AXIS_MOVE_SIDE_VEHICLE)
@@ -734,6 +754,7 @@ function AutoCombine:acUpdateTick(superFunc, dt)
 	if      not self.isAIThreshing 
 			and self.lastValidInputFruitType ~= FruitUtil.FRUITTYPE_UNKNOWN
 			and self.acTurnStage >= 98 then
+		AutoCombineHud.setInfoText( self )
 		AutoCombine.autoSteer(self,dt)
 	end
 	

@@ -12,6 +12,8 @@
 ------------------------------------------------------------------------
 function AutoCombine:acUpdateAIMovement(superFunc, dt)
 
+	AutoCombineHud.setInfoText( self )
+
 --if self.acTurnStage > 0 then print(tostring(AutoCombine.getTurnDistanceX(self)).." "..tostring(AutoCombine.getTurnDistanceZ(self)).." "..tostring(math.deg(AutoCombine.getTurnAngle(self)))) end
 
 	if self.acParameters == nil or self.acParameters.enabled == nil or not self.acParameters.enabled then
@@ -183,6 +185,9 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
   local speedLevel = self.acParameters.speed
 	if speedLevel <= 0 or self.acParameters.pause then
 		allowedToDrive = false
+		self.isHirableBlocked = true
+		AutoCombine.setStatus( self, 0 )
+		AutoCombineHud.setInfoTextID(self, "AC_COMBINE_WAITING_PAUSE")
 	end
 	
 	if self.driveBackPosX ~= nil then

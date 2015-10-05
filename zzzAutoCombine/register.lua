@@ -72,6 +72,9 @@ function AutoCombineRegister:add()
 	g_i18n.globalI18N.texts["AC_COMBINE_TXT_START"]                = g_i18n:getText("AC_COMBINE_TXT_START");
 	g_i18n.globalI18N.texts["AC_COMBINE_TXT_STOP"]                 = g_i18n:getText("AC_COMBINE_TXT_STOP");
 	g_i18n.globalI18N.texts["AC_COMBINE_TXT_WORKWIDTH"]            = g_i18n:getText("AC_COMBINE_TXT_WORKWIDTH");
+	g_i18n.globalI18N.texts["AC_COMBINE_STEERING_ON"]              = g_i18n:getText("AC_COMBINE_STEERING_ON");
+	g_i18n.globalI18N.texts["AC_COMBINE_STEERING_OFF"]             = g_i18n:getText("AC_COMBINE_STEERING_OFF");
+	g_i18n.globalI18N.texts["AC_COMBINE_CONTINUE"]                 = g_i18n:getText("AC_COMBINE_CONTINUE");
 	g_i18n.globalI18N.texts["AC_COMBINE_TXT_ACTIVESIDELEFT"]       = g_i18n:getText("AC_COMBINE_TXT_ACTIVESIDELEFT");
 	g_i18n.globalI18N.texts["AC_COMBINE_TXT_ACTIVESIDERIGHT"]      = g_i18n:getText("AC_COMBINE_TXT_ACTIVESIDERIGHT");
 	g_i18n.globalI18N.texts["AC_COMBINE_WAITMODE_ON"]              = g_i18n:getText("AC_COMBINE_WAITMODE_ON");
@@ -86,6 +89,7 @@ function AutoCombineRegister:add()
 	g_i18n.globalI18N.texts["AC_COMBINE_WAITING_WEATHER"]          = g_i18n:getText("AC_COMBINE_WAITING_WEATHER");
 	g_i18n.globalI18N.texts["AC_COMBINE_WAITING_TRAILER"]          = g_i18n:getText("AC_COMBINE_WAITING_TRAILER");
 	g_i18n.globalI18N.texts["AC_COMBINE_WAITING_DISCHARGE"]        = g_i18n:getText("AC_COMBINE_WAITING_DISCHARGE");
+	g_i18n.globalI18N.texts["AC_COMBINE_WAITING_PAUSE"]            = g_i18n:getText("AC_COMBINE_WAITING_PAUSE");
 	g_i18n.globalI18N.texts["AC_COMBINE_UTURN_ON"]                 = g_i18n:getText("AC_COMBINE_UTURN_ON");
 	g_i18n.globalI18N.texts["AC_COMBINE_UTURN_OFF"]                = g_i18n:getText("AC_COMBINE_UTURN_OFF");
 	g_i18n.globalI18N.texts["AC_COMBINE_REVERSE_ON"]               = g_i18n:getText("AC_COMBINE_REVERSE_ON");

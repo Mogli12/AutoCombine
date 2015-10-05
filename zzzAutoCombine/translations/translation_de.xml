@@ -10,6 +10,11 @@
 		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="Arbeitsbreite:"/>
 		<text name="AC_COMBINE_SWAP_SIDE"                           text="Tausche aktive Seite"/>
 		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine AN/AUS"/>
+		<text name="AC_COMBINE_UTURN_ON_OFF"                        text="AutoCombine-Modus wechseln"/>
+		<text name="AC_COMBINE_STEERING"                            text="Manueller Lenkeingriff"/>
+		<text name="AC_COMBINE_STEERING_ON"                         text="Manueller Lenkeingriff [an]"/>
+		<text name="AC_COMBINE_STEERING_OFF"                        text="Manueller Lenkeingriff [aus]"/>
+		<text name="AC_COMBINE_CONTINUE"                            text="Weiter fahren"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="Aktive Seite: LINKS"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="Aktive Seite: RECHTS"/>
 		
@@ -34,6 +39,7 @@
 		<text name="AC_COMBINE_WAITING_WEATHER"                     text="Warten auf besseres Wetter"/>
 		<text name="AC_COMBINE_WAITING_TRAILER"                     text="Warten auf Anhänger"/>
 		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="Abtanken"/>
+		<text name="AC_COMBINE_WAITING_PAUSE"                       text="Pause"/>
 		<text name="AC_COMBINE_UTURN_ON"                            text="AutoCombine-Modus [auf/ab]"/>
 		<text name="AC_COMBINE_UTURN_OFF"                           text="AutoCombine-Modus [Kreisfahrt]"/>	
 		<text name="AC_COMBINE_REVERSE_ON"                          text="Wendemodus [rückwärts]"/>
