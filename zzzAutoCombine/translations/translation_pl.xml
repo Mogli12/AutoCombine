@@ -10,6 +10,11 @@
 		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="szerokość robocza:"/>
 		<text name="AC_COMBINE_SWAP_SIDE"                           text="zamień lewa/prawa"/>
 		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine WŁ/WYŁ"/>
+		<text name="AC_COMBINE_UTURN_ON_OFF"                        text="zmień tryb AutoCombine"/>
+		<text name="AC_COMBINE_STEERING"                            text="sterowanie ręczne"/>
+		<text name="AC_COMBINE_STEERING_ON"                         text="sterowanie ręczne [wł.]"/>
+		<text name="AC_COMBINE_STEERING_OFF"                        text="sterowanie ręczne [wył.]"/>
+		<text name="AC_COMBINE_CONTINUE"                            text="kontynuuj"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="aktywna strona: LEWA"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="aktywna strona: PRAWA"/>
 
@@ -34,6 +39,7 @@
 		<text name="AC_COMBINE_WAITING_WEATHER"                     text="oczekiwanie na lepszą pogodę"/>
 		<text name="AC_COMBINE_WAITING_TRAILER"                     text="oczekiwanie na przyczepę"/>
 		<text name="AC_COMBINE_WAITING_DISCHARGE"                   text="rozładowywanie"/>
+		<text name="AC_COMBINE_WAITING_PAUSE"                       text="pauza"/>
 		<text name="AC_COMBINE_UTURN_ON"                            text="Tryb AutoCombine [tam/z powrotem]"/>
 		<text name="AC_COMBINE_UTURN_OFF"                           text="Tryb AutoCombine [na około]"/>
 		<text name="AC_COMBINE_REVERSE_ON"                          text="Tryb nawracania [z cofaniem]"/>
