@@ -1269,20 +1269,29 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 --==============================================================				
 --==============================================================				
 	if math.abs( self.acAxisSide ) > 0.1 then
-		AutoCombine.setStatus( self, 0 )
-		self.acBorderDetected = false
-		border   = 0
-		angle    = self.acAxisSide * self.acDimensions.maxSteeringAngle
-		if self.acParameters.leftAreaActive then
-			angle = -angle		
+		self.acOverrideSteeringTime = g_currentMission.time + 2000
+	end
+	
+	if self.acOverrideSteeringTime ~= nil then
+		if self.acOverrideSteeringTime <= g_currentMission.time then
+			self.acOverrideSteeringTime = nil
+		else
+			AutoCombine.setStatus( self, 0 )
+			self.acBorderDetected = false
+			border   = 0
+			deltaAngle = 0.001 * ( self.acOverrideSteeringTime - g_currentMission.time ) * self.acAxisSide * self.acDimensions.maxSteeringAngle
+			if self.acParameters.leftAreaActive then
+				deltaAngle = -deltaAngle		
+			end
+			if not moveForwards then
+				deltaAngle = -deltaAngle		
+			end
+			angle          = angle + deltaAngle
+			self.turnTimer = self.turnTimer + dt
+			if self.aiRescueTimer ~= nil and self.acTurnStage <= 0 then
+				self.aiRescueTimer = self.aiRescueTimer + dt
+			end			
 		end
-		if not moveForwards then
-			angle = -angle		
-		end
-		self.turnTimer = self.turnTimer + dt
-		if self.aiRescueTimer ~= nil and self.acTurnStage <= 0 then
-			self.aiRescueTimer = self.aiRescueTimer + dt
-		end			
 	end			
 --==============================================================				
 --==============================================================				
