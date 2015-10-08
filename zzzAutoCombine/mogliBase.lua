@@ -9,11 +9,13 @@
 -- 2.04 getText with default text
 -- 3.01 initial 3.0 version: use g_currentModDirectory as part of the class name
 -- 3.02 bug fix local functions / use local class instead
+-- 3.03 input binding: check if shift/alt/crtl is pressed
+-- 3.04 hide warnings of missing input bindings
 
 -- Usage:  source(Utils.getFilename("mogliBase.lua", g_currentModDirectory));
 --         _G[g_currentModDirectory.."mogliBase"].newClass( "AutoCombine", "acParameters" )
 
-local mogliBaseVersion = 3.02
+local mogliBaseVersion = 3.04
 local mogliBaseClass     = g_currentModName..".mogliBase"
 local mogliEventClass    = g_currentModName..".mogliEvent"
 --local mogliEventClass_mt = g_currentModDirectory.."mogliEvent_mt"
@@ -55,6 +57,24 @@ else
 		self.value     = value 
 		return self 
 	end 
+	
+	function mogliBase30.checkForKeyModifiers( keys )
+		local modifiers = {}
+		for keyId,bool in pairs( Input.keyIdIsModifier ) do
+			modifiers[keyId] = true
+		end
+		for _, keyId in pairs(keys) do
+			modifiers[keyId] = false
+		end
+		for keyId,bool in pairs(modifiers) do
+			if bool and Input.isKeyPressed( keyId ) then
+			--print("Modifier is pressed: "..tostring(Input.keyIdToIdName[keyId]))
+				return false
+			end
+		end
+		return true
+	end
+	
 	
 --=======================================================================================
 -- mogliBase30.newclass
@@ -134,31 +154,44 @@ else
 	--**********************************************************************************************************	
 	-- hasInputEvent
 	--**********************************************************************************************************	
-		function _newClass_.mbHasInputEvent( name )
+		function _newClass_.mbHasInputEvent( name, noWarning )
 			if InputBinding[name] == nil then
-				if _newClass_.mbUndefinedInputs == nil then
-					_newClass_.mbUndefinedInputs = {}
-				end
-				if not ( _newClass_.mbUndefinedInputs[name] ) then
-					_newClass_.mbUndefinedInputs[name] = true
-					print("WARNING: undefined input in ".._globalClassName_..": "..tostring(name))
+				if not ( noWarning or _newClass_.noInputWarning ) then
+					if _newClass_.mbUndefinedInputs == nil then
+						_newClass_.mbUndefinedInputs = {}
+					end
+					if not ( _newClass_.mbUndefinedInputs[name] ) then
+						_newClass_.mbUndefinedInputs[name] = true
+						print("WARNING: undefined input in ".._globalClassName_..": "..tostring(name))
+					end
 				end
 				return false
 			end
-			return InputBinding.hasEvent(InputBinding[name])		
+			if InputBinding.hasEvent(InputBinding[name]) then
+				if InputBinding.areKeysPressed( InputBinding.actions[InputBinding[name]].keys1 ) then
+				  return mogliBase30.checkForKeyModifiers( InputBinding.actions[InputBinding[name]].keys1 )
+				end
+				if InputBinding.areKeysPressed( InputBinding.actions[InputBinding[name]].keys2 ) then
+				  return mogliBase30.checkForKeyModifiers( InputBinding.actions[InputBinding[name]].keys2 )
+				end
+				return true
+			end
+			return false
 		end
 
 	--**********************************************************************************************************	
 	-- hasInputEvent
 	--**********************************************************************************************************	
-		function _newClass_.mbIsInputPressed( name )
+		function _newClass_.mbIsInputPressed( name, noWarning )
 			if InputBinding[name] == nil then
-				if _newClass_.mbUndefinedInputs == nil then
-					_newClass_.mbUndefinedInputs = {}
-				end
-				if not ( _newClass_.mbUndefinedInputs[name] ) then
-					_newClass_.mbUndefinedInputs[name] = true
-					print("WARNING: undefined input in ".._globalClassName_..": "..tostring(name))
+				if not ( noWarning or _newClass_.noInputWarning ) then
+					if _newClass_.mbUndefinedInputs == nil then
+						_newClass_.mbUndefinedInputs = {}
+					end
+					if not ( _newClass_.mbUndefinedInputs[name] ) then
+						_newClass_.mbUndefinedInputs[name] = true
+						print("WARNING: undefined input in ".._globalClassName_..": "..tostring(name))
+					end
 				end
 				return false
 			end
