@@ -10,6 +10,11 @@
 		<text name="AC_COMBINE_TXT_WORKWIDTH"                       text="Рабочая ширина:"/>
 		<text name="AC_COMBINE_SWAP_SIDE"                           text="Сместится влево/вправо"/>
 		<text name="AC_COMBINE_ENABLE"                              text="AutoCombine ВКЛ/ВЫКЛ"/>
+		<text name="AC_COMBINE_UTURN_ON_OFF"                        text="Изменить режим AutoCombine"/>
+		<text name="AC_COMBINE_STEERING"                            text="Ручное управление"/>
+		<text name="AC_COMBINE_STEERING_ON"                         text="Ручное управление [ВКЛ]"/>
+		<text name="AC_COMBINE_STEERING_OFF"                        text="Ручное управление [ВЫКЛ]"/>
+		<text name="AC_COMBINE_CONTINUE"                            text="Продолжить"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDELEFT"                  text="Активная сторона: ЛЕВАЯ"/>
 		<text name="AC_COMBINE_TXT_ACTIVESIDERIGHT"                 text="Активная сторона: ПРАВАЯ"/>
 
