@@ -885,12 +885,13 @@ function AutoCombine:startAIThreshing(noEventSend)
 	if self.acParameters ~= nil and self.acParameters.enabled then
 		AutoCombine.initMogliHud(self)
 		self.realForceAiDriven = true
-		self.acDimensions  = nil
-		self.acTurnStage   = -3
-		self.turnTimer     = self.acDeltaTimeoutWait
-		self.aiRescueTimer = self.acDeltaTimeoutStop
-		self.waitForTurnTime = 0
-		self.lastSpeedLevel  = 0
+		self.acDimensions      = nil
+		self.acTurnStage       = -3
+		self.turnTimer         = self.acDeltaTimeoutWait
+		self.aiRescueTimer     = self.acDeltaTimeoutStop
+		self.waitForTurnTime   = 0
+		self.lastSpeedLevel    = 0
+		self.acTargetRotTimer  = 0
 
 		AutoCombine.addBackTrafficCollisionTrigger(self)
 		
@@ -1395,7 +1396,8 @@ function AutoCombine:calculateDistances()
 --self.acDimensions.maxLookingAngle = math.min( AutoCombine.calculateSteeringAngle( self, 2, 1 ) ,self.acDimensions.maxSteeringAngle)
 	self.acDimensions.maxLookingAngle = math.min( AutoCombine.calculateSteeringAngle( self, 2, 2 ) ,self.acDimensions.maxSteeringAngle)
 --local factor = math.max( 0.7, math.cos( math.min( AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
-	local factor = math.max( 0.8, math.cos( math.min( self.acDimensions.maxLookingAngle, 0.5 * math.pi ) ) - 1 + math.sin( math.max( 0.5 * math.pi - self.acDimensions.maxLookingAngle, 0 ) ) )
+--local factor = math.max( 0.8, math.cos( math.min( self.acDimensions.maxLookingAngle, 0.5 * math.pi ) ) - 1 + math.sin( math.max( 0.5 * math.pi - self.acDimensions.maxLookingAngle, 0 ) ) )
+	local factor = 1
 	self.acDimensions.insideDistance  = self.acDimensions.cutterDistance - self.acDimensions.distance + self.acDimensions.radius * factor 
 	
 	if self.acDimensions.aaAngle > 1E-6 then

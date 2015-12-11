@@ -266,9 +266,16 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
     hasFruitPreparer = true
   end
 
+	local maxAngle = 25
+	if self.acDimensions ~= nil and self.acDimensions.maxSteeringAngle ~= nil then
+		maxAngle = math.deg( self.acDimensions.maxSteeringAngle )
+	end
+	
 	local angle = 0
 	self.acBorderDetected = false
 	self.turnTimer        = self.turnTimer - dt
+	
+	local targetAngle = nil
 	
 	if self.aiRescueTimer ~= nil and self.acTurnStage ~= 0 then
 		if self.aiRescueTimer < 0 then
@@ -646,8 +653,29 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 
 --==============================================================		
 --==============================================================		
+		if self.acTargetRotTimer > 0 then
+			self.acTargetRotTimer = self.acTargetRotTimer - dt
+			allowedToDrive        = false
+			moveForwards          = self.acTargetMoveForwards			
+			angle                 = self.acTargetAngle
+			
+		--print(string.format("%4d %0.5f %0.5f %0.5f => %3.1f° %s %d %2.1f km/h", self.acTargetRotTimer, self.minRotTime, self.acTargetRotTime, self.maxRotTime, math.deg(angle), tostring(self.acTargetMoveForwards), self.movingDirection, self.lastSpeedReal*3600 ))
+			
+			if math.abs( self.rotatedTime - self.acTargetRotTime ) * 50 < math.abs( self.maxRotTime ) + math.abs( self.minRotTime ) then			
+				if     math.abs( self.lastSpeedReal ) < 2.778e-4
+						or ( self.movingDirection >= 0 and self.acTargetMoveForwards )
+						or ( self.movingDirection <= 0 and not ( self.acTargetMoveForwards ) ) then
+					allowedToDrive        = true
+					self.acTargetRotTimer = 0
+				--print("==============================================================")
+				end
+			end
+						
+--==============================================================		
+
+--==============================================================		
 -- turn 90° or turn outside
-		if     self.acTurnStage == 1 then
+		elseif     self.acTurnStage == 1 then
 			AICombine.setAIImplementsMoveDown(self,false)
 			self.acTurnStage   = 8
 			self.turnTimer     = self.acDeltaTimeoutWait
@@ -702,7 +730,9 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			--if self.turnTimer < 0 then
 			if self.strawPSenabled then
 			-- wait
-			elseif self.waitForTurnTime < g_currentMission.time then
+			else
+				moveForwards     = false					
+				targetAngle      = angle
 				self.acTurnStage = targetTS
 				self.turnTimer   = self.acDeltaTimeoutStart
 			end
@@ -726,12 +756,13 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			moveForwards = false					
 			
 			if     AutoCombine.getTurnDistance(self) > 18
-					or ( not self.acFruitsDetected
-					 and ( self.acBorderDetected or ( self.turnTimer < 0 and math.abs( turnAngle ) > 90 ) ) ) 
+					or ( not self.acFruitsDetected 
+					 and ( ( self.acBorderDetected and math.abs( turnAngle ) > 45 )
+							or ( self.turnTimer < 0 and math.abs( turnAngle ) > 90 ) ) ) 
 					or ( self.acTurn2Outside and self.acBorderDetected ) then
 				self.acTurnStage   = 3
 				self.turnTimer     = self.acDeltaTimeoutWait
-				self.lastTurnAngle = -angle
+				self.lastTurnAngle = angle
 				AICombine.setAIImplementsMoveDown(self,true)
 			end
 
@@ -819,10 +850,11 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			elseif self.waitForTurnTime < g_currentMission.time then
 				AICombine.setAIImplementsMoveDown(self,false)
 
-				if self.acTurn2Outside then
+				if turnAngle < math.deg(self.acDimensions.uTurnAngle) - 3 then
+					self.acTurn2Outside = true
 					self.acTurnStage = 12
 					self.turnTimer   = self.acDeltaTimeoutStop
-				elseif not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance then
+				elseif not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance - 0.5 then
 					self.acTurnStage = 17
 					self.lastTurnAngle = math.deg(AutoCombine.getTurnAngle(self))					
 				else
@@ -840,19 +872,23 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 										
 				if turnAngle >= math.deg(self.acDimensions.uTurnAngle) then
 					self.acTurn2Outside = false
-					self.acTurnStage = 13
+				--self.acTurnStage = 13
+					self.acTurnStage = 12
+					targetAngle      = self.acDimensions.maxSteeringAngle
 					self.turnTimer   = self.acDeltaTimeoutRun
 				end
 			else
 				angle = self.acDimensions.maxSteeringAngle
 								
 				if turnAngle <= 0 then
-					if not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance then
+					if not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance - 0.5 then
 						--AICombine.setAIImplementsMoveDown(self,true)
 						self.acTurnStage = 17
 						self.lastTurnAngle = math.deg(AutoCombine.getTurnAngle(self))					
 					else
-						self.acTurnStage = 14
+					--self.acTurnStage = 14
+						self.acTurnStage = 15
+						targetAngle      = 0
 						self.turnTimer   = self.acDeltaTimeoutRun
 					end
 				end
@@ -888,8 +924,9 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 
 			angle = 0
 				
-			if not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance then
-				self.acTurnStage = 16					
+			if not self.acFruitsDetected and AutoCombine.getTurnDistance(self) > self.acDimensions.uTurnDistance + 0.5 then
+			--self.acTurnStage = 16					
+				self.acTurnStage = 17					
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
 
@@ -904,6 +941,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			if self.turnTimer < 0 then
 				--AICombine.setAIImplementsMoveDown(self,true)
 				self.acTurnStage   = 17					
+				targetAngle        = self.acDimensions.maxSteeringAngle
 				self.lastTurnAngle = math.deg(AutoCombine.getTurnAngle(self))					
 			end
 			
@@ -958,8 +996,9 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			angle = self.lastTurnAngle
 			
 			if self.turnTimer < 0 then
-				self.acTurnStage = -2					
-				self.turnTimer   = self.acDeltaTimeoutStart
+				self.lastTurnAngle = 0
+				self.acTurnStage   = -2					
+				self.turnTimer     = self.acDeltaTimeoutStart
 			end
 			
 --==============================================================				
@@ -970,109 +1009,103 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			AICombine.setAIImplementsMoveDown(self,false)
 			self.acTurnStage = self.acTurnStage + 1
 			self.turnTimer   = self.acDeltaTimeoutRun
+			local z = AutoCombine.getTurnDistanceZ(self)
 			
-		--print(string.format("acTurnStage 21: %2.2fm",AutoCombine.getTurnDistanceZ(self)))
-			
+			if     z > self.acDimensions.uTurnDistance2 + 0.5 then
+				self.acTurnStage = self.acTurnStage + 1
+			elseif z < self.acDimensions.uTurnDistance2 - 0.5 then
+				self.acTurnStage = self.acTurnStage + 2
+			else
+				self.acTurnStage = self.acTurnStage + 3
+			end
+				
 --==============================================================				
 -- go to the right distance before the U-turn
 		elseif self.acTurnStage == 22 then
 
-			angle = math.rad( turnAngle )
+			angle        = math.rad( turnAngle )
+			moveForwards = false
 			
-			local z = AutoCombine.getTurnDistanceZ(self)
-		--print(string.format("acTurnStage 22: %2.2fm",z))
+			if AutoCombine.getTurnDistanceZ(self) <= self.acDimensions.uTurnDistance2 + 0.5 then
+				self.acTurnStage = self.acTurnStage + 2
+				self.turnTimer   = self.acDeltaTimeoutRun
+			end
 
-			if     z > self.acDimensions.uTurnDistance2 + 0.5 then
-				moveForwards = false
-			--angle = -angle
-			elseif z < self.acDimensions.uTurnDistance2 - 0.5 then
-				moveForwards = true
-			else
+--==============================================================				
+-- go to the right distance before the U-turn
+		elseif self.acTurnStage == 23 then
+
+			angle        = math.rad( turnAngle )
+			moveForwards = true
+			
+			if AutoCombine.getTurnDistanceZ(self) >= self.acDimensions.uTurnDistance2 - 0.5 then
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
 
 --==============================================================				
 -- wait before U-turn					
-		elseif self.acTurnStage == 23 then
+		elseif self.acTurnStage == 24 then
 			allowedToDrive = false		
-			angle          = self.acDimensions.maxSteeringAngle
 
-			local z = AutoCombine.getTurnDistanceZ(self)
-
-			if self.strawPSenabled then
-			-- wait
-				angle            = math.rad( turnAngle )
-				self.turnTimer   = self.acDeltaTimeoutRun
-			--noBreaking       = true
-			elseif self.turnTimer < 0 then
+			if not self.strawPSenabled then
+				targetAngle      = self.acDimensions.maxSteeringAngle
+				moveForwards     = true
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 				angle = self.acDimensions.maxSteeringAngle
-			--print(string.format("acTurnStage 23: %2.2fm",AutoCombine.getTurnDistanceZ(self)))
 			end
 
 --==============================================================				
 -- turn 90°
-		elseif self.acTurnStage == 24 then
+		elseif self.acTurnStage == 25 then
 
 			angle = self.acDimensions.maxSteeringAngle
 			
 			if turnAngle < -87 then
 
-				if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.5
-				    or AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.5 then
+				if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.5 then
 				-- move to right position II
 					self.acTurnStage = self.acTurnStage + 1
 					self.turnTimer   = self.acDeltaTimeoutRun
+				elseif AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.5 then
+				-- move to right position II
+					self.acTurnStage = self.acTurnStage + 2
+					self.turnTimer   = self.acDeltaTimeoutRun
 				else
 				-- turn 30°
-					self.acTurnStage = self.acTurnStage + 4
+					targetAngle      = self.acDimensions.maxSteeringAngle
+					self.acTurnStage = self.acTurnStage + 3
 					self.turnTimer   = self.acDeltaTimeoutRun
 				end
-			end
-			
---==============================================================				
--- wait during U-turn
-		elseif self.acTurnStage == 25 then
-			allowedToDrive = false	
-			noBreaking     = true
-			
-			angle = math.rad( turnAngle + 90 )
-			
-			if self.turnTimer < 0 then
-				self.acTurnStage = self.acTurnStage + 1
-				self.turnTimer   = self.acDeltaTimeoutRun
 			end
 
 --==============================================================				
 -- move to right position II
 		elseif self.acTurnStage == 26 then
 
-			angle = math.rad( turnAngle + 90 )
+			angle        = math.rad( turnAngle + 90 )
+			moveForwards = false
 			
-			if     AutoCombine.getTurnDistanceX(self) > self.acDimensions.distance + self.acDimensions.distance + 0.5 then
-				moveForwards = false
-			--angle = -angle
-			elseif AutoCombine.getTurnDistanceX(self) < self.acDimensions.distance + self.acDimensions.distance - 0.5 then
-				moveForwards = true					
-			else
-				self.acTurnStage = self.acTurnStage + 1
+			if AutoCombine.getTurnDistanceX(self) <= self.acDimensions.distance + self.acDimensions.distance + 0.5 then
+				targetAngle      = self.acDimensions.maxSteeringAngle
+				moveForwards     = true					
+				self.acTurnStage = self.acTurnStage + 2
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
 			
 --==============================================================				
--- wait during U-turn
+-- move to right position II
 		elseif self.acTurnStage == 27 then
-			allowedToDrive = false						
+
+			angle        = math.rad( turnAngle + 90 )
 			
-			angle = self.acDimensions.maxSteeringAngle
-			
-			if self.turnTimer < 0 then
+			if AutoCombine.getTurnDistanceX(self) >= self.acDimensions.distance + self.acDimensions.distance - 0.5 then
+				targetAngle      = self.acDimensions.maxSteeringAngle
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
-
+			
 --==============================================================				
 -- turn 30°
 		elseif self.acTurnStage == 28 then
@@ -1080,25 +1113,15 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			angle = self.acDimensions.maxSteeringAngle
 			
 			if turnAngle < -119 then
-				self.acTurnStage = self.acTurnStage + 1
-				self.turnTimer   = self.acDeltaTimeoutRun
-			end
-			
---==============================================================				
--- wait during U-turn
-		elseif self.acTurnStage == 29 then
-			allowedToDrive = false						
-			
-			angle = -self.acDimensions.maxSteeringAngle
-			
-			if self.turnTimer < 0 then
+				moveForwards     = false
+				targetAngle      = self.acDimensions.maxSteeringAngle
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 			end
 			
 --==============================================================				
 -- turn -60°
-		elseif self.acTurnStage == 30 then
+		elseif self.acTurnStage == 29 then
 
 			angle = self.acDimensions.maxSteeringAngle
 			moveForwards = false
@@ -1110,7 +1133,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		
 --==============================================================				
 -- turn -60°
-		elseif self.acTurnStage == 31 then
+		elseif self.acTurnStage == 30 then
 
 			angle = math.rad( 180 - turnAngle )
 			moveForwards = false
@@ -1130,14 +1153,14 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		
 --==============================================================				
 -- wait after U-turn
-		elseif self.acTurnStage == 32 then
+		elseif self.acTurnStage == 31 then
 			allowedToDrive = false						
 			
 			angle = self.lastTurnAngle
 			
 			if self.turnTimer < 0 then
-				self.acTurnStage = -2					
-				self.turnTimer   = self.acDeltaTimeoutStart
+				self.acTurnStage   = -2					
+				self.turnTimer     = self.acDeltaTimeoutStart
 			end
 			
 --==============================================================	
@@ -1145,9 +1168,8 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 --==============================================================				
 -- searching...
 		elseif self.acTurnStage < 0 then
-			AutoCombine.saveDirection( self, false )
-			moveForwards     = true
-
+			moveForwards = true
+			
 			if      self.acFruitsDetected 
 					and ( self.acTurnStage > -3 or self.acBorderDetected ) then
 				self.acTurnStage    = 0
@@ -1215,16 +1237,16 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					end
 				end			
 --==============================================================				
-			
+
 				if     self.acTurn2Outside 
 						or not self.acParameters.upNDown
-						or AutoCombine.getTraceLength(self) < self.acDimensions.distance + self.acDimensions.distance then		
+						or AutoCombine.getTraceLength(self) < self.acDimensions.distance + self.acDimensions.distance 
+						or turnAngle < -50 then
 					self.acTurnStage = 1
 					self.turnTimer = self.acDeltaTimeoutWait
 				elseif self.acParameters.noReverse then
 					--invert turn angle because we will swap left/right in about 10 lines
 					turnAngle = -turnAngle
-					self.acTurn2Outside = true --turnAngle < self.acDimensions.uTurnAngle
 					self.acTurnStage = 11
 					self.turnTimer = self.acDeltaTimeoutWait
 					self.waitForTurnTime = g_currentMission.time + self.turnTimer
@@ -1237,7 +1259,11 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 					self.waitForTurnTime = g_currentMission.time + self.turnTimer
 					self:acSetState( "leftAreaActive", not self.acParameters.leftAreaActive )
 				end
-				AutoCombine.saveDirection( self, false )
+				if not ( self.acParameters.upNDown and self.acTurnStage == 1 ) then
+					AutoCombine.saveDirection( self, false )
+				end
+				self.lastTurnAngle    = 0
+				self.acTargetRotTimer = 0
 			end
 			
 --==============================================================				
@@ -1319,11 +1345,6 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 				implement.object.bunkerrechts = not self.acParameters.leftAreaActive
 			end
 		end
-	end
-	
-	local maxAngle = 25
-	if self.acDimensions ~= nil and self.acDimensions.maxSteeringAngle ~= nil then
-		maxAngle = math.deg( self.acDimensions.maxSteeringAngle )
 	end
 	
 	local lx, lz = 0, 1
@@ -1409,6 +1430,30 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 	self.lastSpeedLevel = speedLevel
 	
 	AIVehicleUtil.driveInDirection(self, dt, maxAngle, acceleration, math.max(0.25,0.75*acceleration), slowAngleLimit, allowedToDrive, moveForwards, lx, lz, speedLevel, 0.6)
+	
+	if targetAngle ~= nil then
+	--print("==============================================================")
+	--print(string.format("%2d %3.1f° %s %s",self.acTurnStage,math.deg(targetAngle),tostring(moveForwards),tostring(self.acParameters.leftAreaActive)))
+		self.acTargetRotTimer     = self.acDeltaTimeoutWait
+		self.acTargetAngle        = targetAngle
+		self.acTargetMoveForwards = moveForwards
+		
+		if not self.acParameters.leftAreaActive then
+			targetAngle = -targetAngle
+		end
+		
+		local turnLeft = targetAngle > 0
+		if not moveForwards then
+			turnLeft = not turnLeft
+		end
+		
+		if turnLeft then
+			self.acTargetRotTime = self.maxRotTime*math.min( math.abs( targetAngle ) / self.acDimensions.maxSteeringAngle, 1)
+		else
+			self.acTargetRotTime = self.minRotTime*math.min( math.abs( targetAngle ) / self.acDimensions.maxSteeringAngle, 1)
+		end
+		
+	end
 	
 	--local maxlx = 0.7071067 --math.sin(maxAngle)
 	--local colDirX = lx
