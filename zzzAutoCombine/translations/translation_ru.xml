@@ -43,8 +43,8 @@
 		<text name="AC_COMBINE_UTURN_OFF"                           text="Режим AutoCombine [по периметру]"/>
 		<text name="AC_COMBINE_REVERSE_ON"                          text="Режим разворота [реверс]"/>
 		<text name="AC_COMBINE_REVERSE_OFF"                         text="Режим разворота [прямо]"/>
-		<text name="AC_COMBINE_WIDTH_OFFSET"                        text="Ширина смещения"/>
-		<text name="AC_COMBINE_TURN_OFFSET"                         text="Развернуть смещение"/>
+		<text name="AC_COMBINE_WIDTH_OFFSET"                        text="Изм. рабочую ширину"/>
+		<text name="AC_COMBINE_TURN_OFFSET"                         text="Отступ для разворота"/>
 		<text name="AC_COMBINE_ERROR"                               text="ошибка"/>
 		<text name="AC_COMBINE_TXT_NEXTTURNSTAGE"                   text="К следующему этапу"/>
 		<text name="AC_COMBINE_TXT_CP_ON"                           text="Режим courseplay [ВКЛ]"/>
