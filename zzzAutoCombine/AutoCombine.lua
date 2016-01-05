@@ -565,22 +565,22 @@ end
 function AutoCombine:update(dt)
 
 	if self.isEntered and self.isClient and self:getIsActive() then
-		if     InputBinding.hasEvent(InputBinding.AC_COMBINE_ENABLE) then
+		if     AutoCombine.mbHasInputEvent( "AC_COMBINE_ENABLE" ) then
 			AutoCombine.onEnable( self, not self.acParameters.enabled )
-		elseif InputBinding.hasEvent(InputBinding.AC_AUTO_STEER) then
+		elseif AutoCombine.mbHasInputEvent( "AC_AUTO_STEER" ) then
 			AutoCombine.initMogliHud(self)
 			if self.acTurnStage < 97 then
 				AutoCombine.onAutoSteer(self, true)
 			else
 				AutoCombine.onAutoSteer(self, false)
 			end
-		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_UTURN_ON_OFF) then
+		elseif AutoCombine.mbHasInputEvent( "AC_COMBINE_UTURN_ON_OFF" ) then
 			self:acSetState( "upNDown", not self.acParameters.upNDown )
-		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_STEERING) then
+		elseif AutoCombine.mbHasInputEvent( "AC_COMBINE_STEERING" ) then
 			self:acSetState( "noSteering", not self.acParameters.noSteering )
-		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_SWAP_SIDE) then
+		elseif AutoCombine.mbHasInputEvent( "AC_COMBINE_SWAP_SIDE" ) then
 			self:acSetState( "leftAreaActive", not self.acParameters.leftAreaActive )
-		elseif InputBinding.hasEvent(InputBinding.AC_COMBINE_HELPPANEL) then
+		elseif AutoCombine.mbHasInputEvent( "AC_COMBINE_HELPPANEL" ) then
 			local guiActive = false
 			if self.acHud ~= nil and self.acHud.GuiActive ~= nil then
 				guiActive = self.acHud.GuiActive
@@ -605,7 +605,7 @@ function AutoCombine:update(dt)
 			if self.acParameters ~= nil and self.acParameters.enabled and self.isAIThreshing then
 				self:setCruiseControlMaxSpeed( self.acParameters.speed )
 			end
-			if InputBinding.hasEvent(InputBinding.TOGGLE_CRUISE_CONTROL) then
+			if AutoCombine.mbHasInputEvent( "TOGGLE_CRUISE_CONTROL" ) then
 				self:acSetState( "pause", not self.acParameters.pause )
 			end
 		end
@@ -720,12 +720,14 @@ function AutoCombine:acUpdateTick(superFunc, dt)
   if      self.isServer
 			and self.isAIThreshing 
 			and self.acParameters ~= nil
-			and self.acParameters.waitMode 
+			and ( self.acParameters.waitMode or ( self.acParameters.enabled and self.acTurnStage > 0 ) )
 			and self.capacity > 0
 			and self.fillLevel > 0.1 * self.capacity 
 			and self.pipeIsUnloading  
-			then		
-		if self.driveBackPosX == nil then
+			then	
+		if self.acParameters.enabled and self.acTurnStage > 0 then
+			self.driveBackPosX = nil
+		elseif self.driveBackPosX == nil then
 			self.driveBackPosX, self.driveBackPosY, self.driveBackPosZ = getWorldTranslation(self.aiTreshingDirectionNode)
 		end
 		self.waitingForDischarge     = true
