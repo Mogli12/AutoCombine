@@ -53,6 +53,11 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 		end
 	end
 
+  if     not ( self.isMotorStarted ) 
+			or ( self.motorStartTime ~= nil and g_currentMission.time <= self.motorStartTime ) then
+		allowedToDrive = false
+	end
+	
 	if self.waitingForTrailerToUnload then
 		if self.lastValidFillType ~= Fillable.FILLTYPE_UNKNOWN then
 			local trailer = self:findTrailerToUnload(self.lastValidFillType)
@@ -1007,7 +1012,6 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 -- raise cutter 			
 		elseif self.acTurnStage == 21 then
 			AICombine.setAIImplementsMoveDown(self,false)
-			self.acTurnStage = self.acTurnStage + 1
 			self.turnTimer   = self.acDeltaTimeoutRun
 			local z = AutoCombine.getTurnDistanceZ(self)
 			
@@ -1047,15 +1051,14 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 -- wait before U-turn					
 		elseif self.acTurnStage == 24 then
 			allowedToDrive = false		
+			angle          = math.rad( turnAngle )
 
 			if not self.strawPSenabled then
-				targetAngle      = self.acDimensions.maxSteeringAngle
-				moveForwards     = true
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
-				angle = self.acDimensions.maxSteeringAngle
+				targetAngle      = self.acDimensions.maxSteeringAngle
 			end
-
+			
 --==============================================================				
 -- turn 90°
 		elseif self.acTurnStage == 25 then

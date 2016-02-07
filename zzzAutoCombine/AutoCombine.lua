@@ -720,18 +720,23 @@ function AutoCombine:acUpdateTick(superFunc, dt)
   if      self.isServer
 			and self.isAIThreshing 
 			and self.acParameters ~= nil
-			and ( self.acParameters.waitMode or ( self.acParameters.enabled and self.acTurnStage > 0 ) )
-			and self.capacity > 0
-			and self.fillLevel > 0.1 * self.capacity 
 			and self.pipeIsUnloading  
-			then	
-		if self.acParameters.enabled and self.acTurnStage > 0 then
-			self.driveBackPosX = nil
-		elseif self.driveBackPosX == nil then
-			self.driveBackPosX, self.driveBackPosY, self.driveBackPosZ = getWorldTranslation(self.aiTreshingDirectionNode)
+			and self.capacity > 0 
+			then
+		if     self.acParameters.waitMode 
+				or ( self.acParameters.enabled and self.acTurnStage > 0 ) then
+			if self.fillLevel > 0.1 * self.capacity  then	
+				if self.acParameters.enabled and self.acTurnStage > 0 then
+					self.driveBackPosX = nil
+				elseif self.driveBackPosX == nil then
+					self.driveBackPosX, self.driveBackPosY, self.driveBackPosZ = getWorldTranslation(self.aiTreshingDirectionNode)
+				end
+				self.waitingForDischarge  = true
+				self.waitForDischargeTime = g_currentMission.time + self.waitForDischargeTimeout
+			end
+		elseif self.waitingForDischarge and self.fillLevel < 0.9 * self.capacity  then	
+			self.waitingForDischarge  = true
 		end
-		self.waitingForDischarge     = true
-		self.waitForDischargeTime    = g_currentMission.time + self.waitForDischargeTimeout
 	end
 
 	if self.isEntered and self.isClient and self:getIsActive() and not self.acParameters.noSteering then

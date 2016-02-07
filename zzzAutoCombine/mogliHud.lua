@@ -110,7 +110,7 @@ else
 		------------------------------------------------------------------------
 		-- init
 		------------------------------------------------------------------------
-		function _newClass_:init( directory, hudName, hudBackground, onTextID, offTextID, showHudKey, x, y, nx, ny, cbOnClick, width, height, text, border )
+		function _newClass_:init( directory, hudName, hudBackground, onTextID, offTextID, showHudKey, x, y, nx, ny, cbOnClick, width, height, text, border, smallNx, smallNy )
 			self[_level0_] = {}
 			self[_level0_].Directory = directory;
 
@@ -134,7 +134,6 @@ else
 			self[_level0_].BtnPosX      = self[_level0_].TextPosX;     
 			self[_level0_].BtnPosY      = self[_level0_].TextPosY + self[_level0_].Border + self[_level0_].TextSize + (ny-1) * ( self[_level0_].BtnHeight + self[_level0_].Border ) 
 			self[_level0_].TextPosY     = self[_level0_].TextPosY + 0.25 * self[_level0_].TextSize
-			self[_level0_].TitlePosY    = self[_level0_].BtnPosY  + self[_level0_].Border + self[_level0_].BtnHeight
 			if     type( hudBackground ) == "string" then
 				self[_level0_].Path       = Utils.getFilename(hudBackground, self[_level0_].Directory)
 				self[_level0_].Overlay    = Overlay:new(hudName, self[_level0_].Path, self[_level0_].PosX, self[_level0_].PosY, self[_level0_].Width, self[_level0_].Height);
@@ -155,12 +154,27 @@ else
 			self[_level0_].Title        = ""
 			
 			_newClass_.addCloseButton( self, nx, ny )
+			
+			if      smallNx ~= nil 
+					and smallNy ~= nil
+					and ( smallNx < nx or smallNy < ny ) then
+				_newClass_.addResizeButton( self, nx, ny )
+				self[_level0_].ResizeSmall  = true
+				self[_level0_].SmallWidth   = smallNx * ( self[_level0_].BtnWidth  + self[_level0_].Border )
+				self[_level0_].SmallHeight  = smallNy * ( self[_level0_].BtnHeight + self[_level0_].Border ) + 2 * self[_level0_].Border + self[_level0_].TextSize + math.max( 0.5*self[_level0_].BtnHeight, self[_level0_].TextSize )
+				self[_level0_].SmallBtnPosY = self[_level0_].TextPosY + self[_level0_].Border + self[_level0_].TextSize + (smallNy-1) * ( self[_level0_].BtnHeight + self[_level0_].Border ) 
+			else
+				self[_level0_].ResizeSmall  = false
+				self[_level0_].SmallWidth   = self[_level0_].Width  
+				self[_level0_].SmallHeight  = self[_level0_].Height 
+				self[_level0_].SmallBtnPosY = self[_level0_].BtnPosY
+			end
 		end
 
 		------------------------------------------------------------------------
 		-- addButton
 		------------------------------------------------------------------------
-		function _newClass_:addButton(imgEnabled, imgDisabled, cbOnClick, cbVisible, nx, ny, textEnabled, textDisabled, textCallback, imgCallback)
+		function _newClass_:addButton(imgEnabled, imgDisabled, cbOnClick, cbVisible, nx, ny, textEnabled, textDisabled, textCallback, imgCallback, smallNx, smallNy)
 			local x = self[_level0_].BtnPosX + (nx-1)*(self[_level0_].BtnWidth+self[_level0_].Border);
 			local y = self[_level0_].BtnPosY - (ny-1)*(self[_level0_].BtnHeight+self[_level0_].Border);
 			local img1 = Utils.getNoNil( imgEnabled, "empty.dds" )
@@ -184,6 +198,9 @@ else
 				overlay2 = Overlay:new(nil, result, x,y,self[_level0_].BtnWidth,self[_level0_].BtnHeight);
 			end
 			local button = {enabled=true, ovEnabled=overlay, ovDisabled=overlay2, onClick=cbOnClick, onVisible=cbVisible, twoState=(imgDisabled ~= nil), rect={x,y,x+self[_level0_].BtnWidth,y+self[_level0_].BtnHeight}, text1 = textEnabled, text2 = textDisabled, textcb = textCallback, onRender = imgCallback };
+			if      smallNx ~= nil 
+					and smallNy ~= nil then
+			end
 			button.overlays = {}
 			button.overlays[img1] = overlay
 			if img2 ~= img1 then
@@ -211,6 +228,28 @@ else
 			local button = {enabled=true, ovEnabled=overlay, ovDisabled=nil, onClick=_newClass_.onClose, onVisible=nil, twoState=false, rect={x,y,x+0.5*self[_level0_].BtnWidth,y+0.5*self[_level0_].BtnHeight}, text1 = nil, text2 = nil, textcb = nil, onRender = nil };
 			button.overlays = {}
 			button.overlays["close.dds"] = overlay
+			if self[_level0_].Buttons == nil then self[_level0_].Buttons = {}; end
+			table.insert(self[_level0_].Buttons, button);
+			return button;
+		end;
+
+		------------------------------------------------------------------------
+		-- onResize
+		------------------------------------------------------------------------
+		function _newClass_:onResize()
+			self[_level0_].ResizeSmall = not self[_level0_].ResizeSmall
+		end
+
+		------------------------------------------------------------------------
+		-- addResizeButton
+		------------------------------------------------------------------------
+		function _newClass_:addResizeButton(nx, ny)
+			local x = self[_level0_].BtnPosX + (nx-1)*(self[_level0_].BtnWidth+self[_level0_].Border) -- + 0.5*self[_level0_].BtnWidth;
+			local y = self[_level0_].BtnPosY + self[_level0_].BtnHeight+self[_level0_].Border;
+			local overlay = Overlay:new(nil, Utils.getFilename("resize.dds", self[_level0_].Directory), x,y,0.5*self[_level0_].BtnWidth,0.5*self[_level0_].BtnHeight);
+			local button = {enabled=true, ovEnabled=overlay, ovDisabled=nil, onClick=_newClass_.onResize, onVisible=nil, twoState=false, rect={x,y,x+0.5*self[_level0_].BtnWidth,y+0.5*self[_level0_].BtnHeight}, text1 = nil, text2 = nil, textcb = nil, onRender = nil };
+			button.overlays = {}
+			button.overlays["resize.dds"] = overlay
 			if self[_level0_].Buttons == nil then self[_level0_].Buttons = {}; end
 			table.insert(self[_level0_].Buttons, button);
 			return button;
@@ -409,7 +448,7 @@ else
 				if self[_level0_].GuiActive then
 					g_mouseControlsHelp.active = false;
 					InputBinding.setShowMouseCursor(true);		
-					titlePosY = self[_level0_].TitlePosY
+					titlePosY = self[_level0_].BtnPosY  + self[_level0_].Border + self[_level0_].BtnHeight
 					showTitle = true
 				else
 					titlePosY = self[_level0_].TextPosY
