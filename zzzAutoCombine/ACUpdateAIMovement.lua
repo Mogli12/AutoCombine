@@ -277,8 +277,15 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 	end
 	
 	local angle = 0
-	self.acBorderDetected = false
-	self.turnTimer        = self.turnTimer - dt
+	self.acBorderDetected   = false
+	self.turnTimer          = self.turnTimer - dt
+	if     self.acTurnStage <= 0 then
+		self.strawPSWaitTimer = self.acDeltaTimeoutStrawPS
+	elseif self.strawPSenabled then
+		self.strawPSWaitTimer = self.strawPSWaitTimer - dt
+	else
+		self.strawPSWaitTimer = 0
+	end
 	
 	local targetAngle = nil
 	
@@ -733,9 +740,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			end
 			
 			--if self.turnTimer < 0 then
-			if self.strawPSenabled then
-			-- wait
-			else
+			if self.strawPSWaitTimer <= 0 then
 				moveForwards     = false					
 				targetAngle      = angle
 				self.acTurnStage = targetTS
@@ -846,7 +851,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			angle = 0
 
 			--if self.turnTimer < 0 then
-			if self.strawPSenabled then
+			if self.strawPSWaitTimer > 0 then
 			-- wait
 				if math.abs( turnAngle ) > 3 then
 					angle          = math.rad( turnAngle )
@@ -1053,7 +1058,7 @@ function AutoCombine:acUpdateAIMovement(superFunc, dt)
 			allowedToDrive = false		
 			angle          = math.rad( turnAngle )
 
-			if not self.strawPSenabled then
+			if self.strawPSWaitTimer <= 0 then
 				self.acTurnStage = self.acTurnStage + 1
 				self.turnTimer   = self.acDeltaTimeoutRun
 				targetAngle      = self.acDimensions.maxSteeringAngle

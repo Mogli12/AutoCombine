@@ -72,6 +72,7 @@ function AutoCombine:load(xmlFile)
 	self.acDeltaTimeoutStop    = 4 * math.max(Utils.getNoNil( self.turnStage1Timeout , 20000), 10000)
 	self.acDeltaTimeoutStart   = math.max(Utils.getNoNil( self.turnTimeoutLong   , 6000 ), 4000 )
 	self.acDeltaTimeoutNoTurn  = math.max(Utils.getNoNil( self.turnStage4Timeout , 2000 ), 1000 )
+	self.acDeltaTimeoutStrawPS = 5000
 	self.acSteeringSpeed       = Utils.getNoNil( self.aiSteeringSpeed, 0.001 )
 	self.acRecalculateDt       = 0
 	self.acTurn2Outside        = false
@@ -896,6 +897,7 @@ function AutoCombine:startAIThreshing(noEventSend)
 		self.acTurnStage       = -3
 		self.turnTimer         = self.acDeltaTimeoutWait
 		self.aiRescueTimer     = self.acDeltaTimeoutStop
+		self.strawPSWaitTimer  = 0
 		self.waitForTurnTime   = 0
 		self.lastSpeedLevel    = 0
 		self.acTargetRotTimer  = 0
@@ -1405,7 +1407,7 @@ function AutoCombine:calculateDistances()
 --local factor = math.max( 0.7, math.cos( math.min( AutoCombine.getCorrectedMaxSteeringAngle(self), 0.5 * math.pi ) ) - 1 + math.sin( math.max( math.pi - AutoCombine.getCorrectedMaxSteeringAngle(self), 0 ) ) )
 --local factor = math.max( 0.8, math.cos( math.min( self.acDimensions.maxLookingAngle, 0.5 * math.pi ) ) - 1 + math.sin( math.max( 0.5 * math.pi - self.acDimensions.maxLookingAngle, 0 ) ) )
 	local factor = 1
-	self.acDimensions.insideDistance  = self.acDimensions.cutterDistance - self.acDimensions.distance + self.acDimensions.radius * factor 
+	self.acDimensions.insideDistance  = self.acDimensions.cutterDistance - self.acDimensions.distance + self.acDimensions.radius * factor + 0.5
 	
 	if self.acDimensions.aaAngle > 1E-6 then
 		self.acDimensions.uTurnRefAngle	  = -120
