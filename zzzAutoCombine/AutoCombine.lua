@@ -762,8 +762,23 @@ function AutoCombine:acUpdateTick(superFunc, dt)
 	if      not self.isAIThreshing 
 			and self.lastValidInputFruitType ~= FruitUtil.FRUITTYPE_UNKNOWN
 			and self.acTurnStage >= 98 then
-		AutoCombineHud.setInfoText( self )
-		AutoCombine.autoSteer(self,dt)
+			
+		local cutterIsLowered = true
+		for _,implement in pairs(self.attachedImplements) do
+			if implement.object ~= nil then
+				if implement.object.attacherJoint.needsLowering and implement.object.aiNeedsLowering then
+					local jointDesc = self.attacherJoints[implement.jointDescIndex]
+					cutterIsLowered = cutterIsLowered and (jointDesc.moveAlpha == jointDesc.lowerAlpha)
+				end
+			end
+		end
+				
+		if cutterIsLowered then
+			AutoCombineHud.setInfoText( self )
+			AutoCombine.autoSteer(self,dt)
+		else
+			AutoCombine.setStatus( self, 0 )
+		end
 	end
 	
 	if self.acDimensions == nil then
