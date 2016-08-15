@@ -169,7 +169,7 @@ function AutoCombine:initMogliHud()
 	AutoCombineHud.addButton(self, "dds/no_distance.dds",    "dds/distance.dds",     AutoCombine.setOtherCombine,AutoCombine.evalOtherCombine, 2,2, "AC_COMBINE_COLLISIONTRIGGERMODE_OFF", "AC_COMBINE_COLLISIONTRIGGERMODE_ON" )	
 	AutoCombineHud.addButton(self, "dds/no_uturn2.dds",      "dds/uturn.dds",        AutoCombine.setUTurn,     AutoCombine.evalUTurn,      3,2, "AC_COMBINE_UTURN_OFF", "AC_COMBINE_UTURN_ON") 
 	AutoCombineHud.addButton(self, "dds/reverse.dds",        "dds/no_reverse.dds",   AutoCombine.setNoReverse, AutoCombine.evalNoReverse,  4,2, "AC_COMBINE_REVERSE_ON", "AC_COMBINE_REVERSE_OFF")
---AutoCombineHud.addButton(self, "dds/no_cp.dds",          "dds/cp.dds",           AutoCombine.setCPSupport, AutoCombine.evalCPSupport,  5,2, "AC_COMBINE_TXT_CP_OFF", "AC_COMBINE_TXT_CP_ON" )
+	AutoCombineHud.addButton(self, "dds/no_pause.dds",       "dds/pause.dds",        AutoCombine.setPause,      AutoCombine.evalPause,      5,2, "AC_COMBINE_PAUSE_OFF", "AC_COMBINE_PAUSE_ON", nil, AutoCombine.getPauseImage );
 
 	AutoCombineHud.addButton(self, "dds/bigger.dds",         nil,                AutoCombine.setWidthUp,   nil, 1,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
 	AutoCombineHud.addButton(self, "dds/smaller.dds",        nil,                AutoCombine.setWidthDown, nil, 2,3, "AC_COMBINE_WIDTH_OFFSET", nil, AutoCombine.getWidth)
@@ -545,6 +545,45 @@ function AutoCombine:onAutoSteer(enabled)
     self.deactivateOnLeave = true
 	end
 end
+
+function AutoCombine:evalPause()
+	if not self.acParameters.enabled then 
+		return true 
+	end 
+	if not self.isAIThreshing then
+		return true
+	end
+	if not self.acParameters.pause then
+		return true
+	end
+	return false
+end
+
+function AutoCombine:setPause(enabled)
+	if not self.acParameters.enabled then 
+		return  
+	end 
+	if not self.isAIThreshing then
+		return 
+	end
+	
+	self:acSetState( "pause", enabled )
+end
+
+
+function AutoCombine:getPauseImage()
+	if not self.acParameters.enabled then 
+		return "empty.dds"
+	end 
+	if not self.isAIThreshing then
+		return "empty.dds"
+	end
+	if not self.acParameters.pause then
+		return "dds/no_pause.dds"
+	end
+	return "dds/pause.dds"
+end
+
 
 ------------------------------------------------------------------------
 -- keyEvent

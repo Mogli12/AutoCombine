@@ -53,5 +53,7 @@
 		<text name="AC_AUTO_STEER"                                  text="auto steer"/>
 		<text name="AC_AUTO_STEER_ON"                               text="auto steer [on]"/>
 		<text name="AC_AUTO_STEER_OFF"                              text="auto steer [off]"/>
+		<text name="AC_COMBINE_PAUSE_ON"                            text="pause [on]" />
+		<text name="AC_COMBINE_PAUSE_OFF"                           text="pause [off]" />
 	</texts>
 </l10n>

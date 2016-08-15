@@ -103,6 +103,8 @@ function AutoCombineRegister:add()
 	g_i18n.globalI18N.texts["AC_AUTO_STEER"]                       = g_i18n:getText("AC_AUTO_STEER");
 	g_i18n.globalI18N.texts["AC_AUTO_STEER_ON"]                    = g_i18n:getText("AC_AUTO_STEER_ON");
 	g_i18n.globalI18N.texts["AC_AUTO_STEER_OFF"]                   = g_i18n:getText("AC_AUTO_STEER_OFF");
+	g_i18n.globalI18N.texts["AC_COMBINE_PAUSE_ON"]                 = g_i18n:getText("AC_COMBINE_PAUSE_ON");
+	g_i18n.globalI18N.texts["AC_COMBINE_PAUSE_OFF"]                = g_i18n:getText("AC_COMBINE_PAUSE_OFF");
 	
 end;
 

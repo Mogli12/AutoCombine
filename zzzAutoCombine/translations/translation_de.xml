@@ -53,5 +53,7 @@
 		<text name="AC_AUTO_STEER"                                  text="Automatische Lenkung"/>
 		<text name="AC_AUTO_STEER_ON"                               text="Autom. Lenkung [an]"/>
 		<text name="AC_AUTO_STEER_OFF"                              text="Autom. Lenkung [aus]"/>
+		<text name="AC_COMBINE_PAUSE_ON"                            text="Pause [an]" />
+		<text name="AC_COMBINE_PAUSE_OFF"                           text="Pause [aus]" />
 	</texts>
 </l10n>
